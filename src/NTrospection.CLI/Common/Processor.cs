@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace NTrospection.Routing.CLI
+namespace NTrospection.CLI.Common
 {
     public static class Processor
     {
