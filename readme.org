@@ -1,5 +1,6 @@
 #+TITLE: NTrospection
 A Collection of libraries design to provide self documenting and routing functionality to .Net Core projects.
+This is a .Net Core re-write of the [[https://github.com/WMaxZimmerman/CommandAndConquer][CommandAndConquer]] library that I had created. 
 
 * Outline
 - NTrospection
