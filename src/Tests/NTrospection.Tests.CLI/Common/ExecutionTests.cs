@@ -31,6 +31,7 @@ namespace NTrospection.Tests.CLI.Common
         }
 
         [TestMethod]
+	[TestCategory("Integration")]
         public void ApplicationTerminatesWithFailedStatusWhenInvalidController()
         {
             string strCmdText;
@@ -42,6 +43,7 @@ namespace NTrospection.Tests.CLI.Common
         }
 
         [TestMethod]
+	[TestCategory("Integration")]
         public void ApplicationTerminatesWithFailedStatusWhenMissingCommand()
         {
             string strCmdText;
@@ -53,6 +55,7 @@ namespace NTrospection.Tests.CLI.Common
         }
 
         [TestMethod]
+	[TestCategory("Integration")]
         public void ApplicationTerminatesWithFailedStatusWhenInvalidParameters()
         {
             string strCmdText;
@@ -64,6 +67,7 @@ namespace NTrospection.Tests.CLI.Common
         }
 
         [TestMethod]
+	[TestCategory("Integration")]
         public void ApplicationTerminatesWithFailedStatusWhenMissingParameters()
         {
             string strCmdText;
@@ -75,10 +79,23 @@ namespace NTrospection.Tests.CLI.Common
         }
 
         [TestMethod]
-        public void ApplicationTerminatesWithSuccessStatus()
+	[TestCategory("Integration")]
+        public void ApplicationTerminatesWithSuccessStatusCalledCorrectly()
         {
             string strCmdText;
             strCmdText = $"/C \"{_directory}{_executableName}\" math add --firstNum 1 --secondNum 2";
+            var proc = Process.Start("CMD.exe", strCmdText);
+            proc.WaitForExit();
+
+            Assert.AreEqual(0, proc.ExitCode);
+        }
+
+        [TestMethod]
+	[TestCategory("Integration")]
+        public void ApplicationTerminatesWithSuccessStatusWhenDocumentation()
+        {
+            string strCmdText;
+            strCmdText = $"/C \"{_directory}{_executableName}\" math ?";
             var proc = Process.Start("CMD.exe", strCmdText);
             proc.WaitForExit();
 
