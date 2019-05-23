@@ -73,5 +73,16 @@ namespace NTrospection.Tests.CLI.Common
 
             Assert.AreEqual(1, proc.ExitCode);
         }
+
+        [TestMethod]
+        public void ApplicationTerminatesWithSuccessStatus()
+        {
+            string strCmdText;
+            strCmdText = $"/C \"{_directory}{_executableName}\" math add --firstNum 1 --secondNum 2";
+            var proc = Process.Start("CMD.exe", strCmdText);
+            proc.WaitForExit();
+
+            Assert.AreEqual(0, proc.ExitCode);
+        }
     }
 }
