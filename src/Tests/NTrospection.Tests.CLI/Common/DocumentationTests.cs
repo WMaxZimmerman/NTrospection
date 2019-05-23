@@ -8,7 +8,7 @@ namespace NTrospection.Tests.CLI.Common
 {
     [TestClass]
     public class DocumentationTests : BaseCliTest
-    {
+    {	
         [TestMethod]
         public void AbleToRetriveProgramDocumentation()
         {
