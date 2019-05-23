@@ -92,7 +92,7 @@ namespace NTrospection.Tests.CLI.Common
             {
                 "An error occurred while executing the command.",
                 "Message: I blew up yer thingy.",
-                @"Stack Trace: at NTrospection.Routing.Tests.CLI.Controllers.ExecutionController.ThrowExceptionMethod(SampleEnum sample) in C:\git\NTrospection.Routing\NTrospection.Routing\Tests\NTrospection.Routing.Tests.CLI\Controllers\ExecutionController.cs:line 28"
+                @"Stack Trace: at NTrospection.Tests.CLI.Common.Controllers.ExecutionController.ThrowExceptionMethod(SampleEnum sample) in C:\git\NTrospection\src\tests\NTrospection.Tests.CLI\Common\Controllers\ExecutionController.cs:line 28"
             };
             Processor.ProcessArguments(new[] { "execute", "exception", $"{argPre}sample", "EnumOne" });
             var temp = mockConsole.ToString();
