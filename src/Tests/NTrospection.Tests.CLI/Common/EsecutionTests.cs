@@ -8,13 +8,26 @@ namespace NTrospection.Tests.CLI.Common
     [TestClass]
     public class ExecutionTests
     {
-        private string _directory;
+        private static string _directory;
         private const string _executableName = "NTrospection.Fake.CLI.exe";
 
-        [TestInitialize]
-        public void Setup()
+	[ClassInitialize]
+        public static void Init(TestContext test)
         {
-            _directory = Directory.GetParent((new System.Uri(Assembly.GetExecutingAssembly().CodeBase)).AbsolutePath).Parent.Parent.Parent.Parent.FullName + @"\Fakes\NTrospection.Fake.CLI\bin\Debug\netcoreapp2.2\win10-x64\";
+	    var projPath = @"\Fakes\NTrospection.Fake.CLI\";
+	    var exePath = @"bin\Debug\netcoreapp2.2\win10-x64\";
+	    
+	    var myPath = Directory.GetParent((new System.Uri(Assembly.GetExecutingAssembly().CodeBase)).AbsolutePath);
+	    var parentDir = myPath.Parent.Parent.Parent.Parent.FullName;
+	    
+            _directory = parentDir + projPath + exePath;
+
+	    var pi = new ProcessStartInfo();
+	    pi.FileName = "CMD.exe";
+	    pi.WorkingDirectory = parentDir + projPath;
+	    pi.Arguments = $"/C dotnet publish -c Debug -r win10-x64";
+	    var proc = Process.Start(pi);
+            proc.WaitForExit();
         }
 
         [TestMethod]
