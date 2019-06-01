@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 
-namespace NTrospection.CLI.Common.Models
+namespace NTrospection.CLI.Models
 {
     public class CommandMethodVm
     {

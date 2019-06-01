@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace NTrospection.CLI.Common.Models
+namespace NTrospection.CLI.Models
 {
     public class MethodParameters
     {

@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NTrospection.CLI.Common;
-using NTrospection.CLI.Common.Models;
+using NTrospection.CLI.Models;
 using NTrospection.Tests.CLI.Common.Controllers;
 
 namespace NTrospection.Tests.CLI.Common

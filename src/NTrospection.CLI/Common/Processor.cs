@@ -1,6 +1,5 @@
-using NTrospection.CLI.Common;
 using NTrospection.CLI.Common.Attributes;
-using NTrospection.CLI.Common.Models;
+using NTrospection.CLI.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
