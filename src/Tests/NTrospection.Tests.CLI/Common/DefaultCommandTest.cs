@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NTrospection.Tests.CLI.Common;
+using NTrospection.CLI;
 
-namespace NTrospection.CLI.Common
+namespace NTrospection.Tests.CLI.Common
 {
     [TestClass]
     public class DefaultCommandTest : BaseCliTest

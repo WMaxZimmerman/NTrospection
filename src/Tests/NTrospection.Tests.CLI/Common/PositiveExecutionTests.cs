@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NTrospection.CLI.Common;
+using NTrospection.CLI;
 
 namespace NTrospection.Tests.CLI.Common
 {

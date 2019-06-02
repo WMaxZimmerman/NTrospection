@@ -1,14 +1,14 @@
 using System;
 
-namespace NTrospection.CLI.Common.Attributes
+namespace NTrospection.CLI.Attributes
 {
-    [AttributeUsage(AttributeTargets.Method)]
-    public class CliCommand : Attribute
+    [AttributeUsage(AttributeTargets.Class, Inherited = false)]
+    public class CliController : Attribute
     {
         public string Name { get; set; }
         public string Description { get; set; }
         
-        public CliCommand(string name, string description)
+        public CliController(string name, string description)
         {
             Name = name;
             Description = description;

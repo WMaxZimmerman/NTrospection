@@ -1,7 +1,7 @@
 using System;
 using System.Configuration;
 
-namespace NTrospection.CLI.Common
+namespace NTrospection.CLI
 {
     public static class Settings
     {

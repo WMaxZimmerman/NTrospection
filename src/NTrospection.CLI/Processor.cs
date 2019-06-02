@@ -1,11 +1,11 @@
-using NTrospection.CLI.Common.Attributes;
+using NTrospection.CLI.Attributes;
 using NTrospection.CLI.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace NTrospection.CLI.Common
+namespace NTrospection.CLI
 {
     public static class Processor
     {

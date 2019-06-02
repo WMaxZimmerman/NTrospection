@@ -1,6 +1,6 @@
 using System;
 
-namespace NTrospection.CLI.Common.Attributes
+namespace NTrospection.CLI.Attributes
 {
     [AttributeUsage(AttributeTargets.Parameter)]
     public class CliParameter: Attribute

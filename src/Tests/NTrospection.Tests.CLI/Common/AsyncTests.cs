@@ -1,5 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NTrospection.CLI.Common;
+using NTrospection.CLI;
 
 namespace NTrospection.Tests.CLI.Common
 {

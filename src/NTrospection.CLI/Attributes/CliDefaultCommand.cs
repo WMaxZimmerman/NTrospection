@@ -1,6 +1,6 @@
 using System;
 
-namespace NTrospection.CLI.Common.Attributes
+namespace NTrospection.CLI.Attributes
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public class CliDefaultCommand : Attribute

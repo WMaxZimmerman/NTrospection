@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NTrospection.CLI.Common;
+using NTrospection.CLI;
 
 namespace NTrospection.Tests.CLI.Common
 {
@@ -92,6 +92,7 @@ namespace NTrospection.Tests.CLI.Common
                 "An error occurred while executing the command.",
                 "Message: I blew up yer thingy.",
                 @"Stack Trace: at NTrospection.Tests.CLI.Common.Controllers.ExecutionController.ThrowExceptionMethod(SampleEnum sample) in c:\git\NTrospection\src\Tests\NTrospection.Tests.CLI\Common\Controllers\ExecutionController.cs:line 28"
+		// === TODO: The above string is unstable and needs to not be hard coded ===
             };
             Processor.ProcessArguments(new[] { "execute", "exception", $"{argPre}sample", "EnumOne" });
             var temp = mockConsole.ToString();

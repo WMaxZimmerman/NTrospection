@@ -1,4 +1,4 @@
-using NTrospection.CLI.Common;
+using NTrospection.CLI;
 using System;
 using System.Collections.Generic;
 using System.Configuration;

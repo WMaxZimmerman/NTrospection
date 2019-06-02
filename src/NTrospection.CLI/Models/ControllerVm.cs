@@ -1,4 +1,4 @@
-using NTrospection.CLI.Common.Attributes;
+using NTrospection.CLI.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
