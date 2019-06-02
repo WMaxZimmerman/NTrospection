@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace NTrospection.CLI
+namespace NTrospection.CLI.Core
 {
     public static class Processor
     {

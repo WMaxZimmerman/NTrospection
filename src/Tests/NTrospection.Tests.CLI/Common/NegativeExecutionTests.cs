@@ -1,8 +1,10 @@
 using System;
+using System.IO;
+using System.Reflection;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NTrospection.CLI;
+using NTrospection.CLI.Core;
 
 namespace NTrospection.Tests.CLI.Common
 {
@@ -87,12 +89,12 @@ namespace NTrospection.Tests.CLI.Common
         public void AbleToHandleCallToCommandThatThrowsException()
         {
             mockConsole.Clear();
+
             var consoleLines = new List<string>
             {
                 "An error occurred while executing the command.",
                 "Message: I blew up yer thingy.",
-                @"Stack Trace: at NTrospection.Tests.CLI.Common.Controllers.ExecutionController.ThrowExceptionMethod(SampleEnum sample) in c:\git\NTrospection\src\Tests\NTrospection.Tests.CLI\Common\Controllers\ExecutionController.cs:line 28"
-		// === TODO: The above string is unstable and needs to not be hard coded ===
+                GetStackTraceForException("ExecutionController", "ThrowExceptionMethod", 28)
             };
             Processor.ProcessArguments(new[] { "execute", "exception", $"{argPre}sample", "EnumOne" });
             var temp = mockConsole.ToString();

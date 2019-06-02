@@ -1,11 +1,11 @@
 using NTrospection.CLI.Attributes;
-using NTrospection.Tests.CLI.Common.Models;
+using NTrospection.Tests.CLI.App.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NTrospection.Tests.CLI.Common.Controllers
+namespace NTrospection.Tests.CLI.App.Controllers
 {
     [CliController("execute", "This is a test description.")]
     public class ExecutionController

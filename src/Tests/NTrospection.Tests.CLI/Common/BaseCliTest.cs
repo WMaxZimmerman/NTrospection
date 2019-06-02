@@ -1,8 +1,9 @@
-using NTrospection.CLI;
+using NTrospection.CLI.Core;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
+using System.Reflection;
 using System.Text;
 
 namespace NTrospection.Tests.CLI.Common
@@ -39,6 +40,21 @@ namespace NTrospection.Tests.CLI.Common
         {
             UpdateConfigValue("paramDetail", detail);
         }
+
+
+	protected static string GetStackTraceForException(string className, string methodName, int line)
+	{
+	    var projPath = $@"NTrospection.Tests.CLI\App\Controllers\{className}";
+	    var namespacePath = projPath.Replace('\\', '.');
+	    var myPath = Directory.GetParent((new System.Uri(Assembly.GetExecutingAssembly().CodeBase)).AbsolutePath);
+	    var stackPath = myPath.Parent.Parent.Parent.Parent.FullName + $@"\{projPath}.cs";
+	    
+	    var stackTrace = @"Stack Trace: at " +
+		$@"{namespacePath}.{methodName}(SampleEnum sample) " +
+		$@"in {stackPath}:line {line}";
+
+	    return stackTrace;
+	}
 
         private void UpdateConfigValue(string key, string value)
         {

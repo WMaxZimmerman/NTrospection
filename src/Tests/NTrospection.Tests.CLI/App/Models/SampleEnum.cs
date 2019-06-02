@@ -1,4 +1,4 @@
-namespace NTrospection.Tests.CLI.Common.Models
+namespace NTrospection.Tests.CLI.App.Models
 {
     public enum SampleEnum
     {

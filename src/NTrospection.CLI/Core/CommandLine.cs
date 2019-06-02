@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace NTrospection.CLI
+namespace NTrospection.CLI.Core
 {
     public static class CommandLine
     {

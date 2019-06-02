@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NTrospection.CLI;
+using NTrospection.CLI.Core;
 using NTrospection.CLI.Models;
-using NTrospection.Tests.CLI.Common.Controllers;
+using NTrospection.Tests.CLI.App.Controllers;
 
 namespace NTrospection.Tests.CLI.Common
 {
