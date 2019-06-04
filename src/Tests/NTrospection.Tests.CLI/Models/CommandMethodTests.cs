@@ -23,6 +23,28 @@ namespace NTrospection.Tests.CLI.Models
 	    _errorMethod = me.GetMethod("MethodThatThrowsError");
 	    _parameterMethod = me.GetMethod("MethodThatHasParameter");
 	}
+
+	
+
+	// === Test Methods ===
+	// Kept here to avoid line number changes in stack trace
+	
+	public void MethodThatDoesNothing()
+	{
+	    // Just use for above tests to call
+	}
+	
+	public void MethodThatThrowsError()
+	{
+	    throw new Exception("I went boom!");
+	}
+	
+	public void MethodThatHasParameter(int something)
+	{
+	    throw new Exception("I went boom!");
+	}
+	
+	// === Test Methods ===
 	
         [TestMethod]
         public void InvokeWillReturnTrueWhenMethodSucceeds()
@@ -44,7 +66,7 @@ namespace NTrospection.Tests.CLI.Models
             {
                 "An error occurred while executing the command.",
                 "Message: I went boom!",
-                GetStackTraceForException("Models", "CommandMethodTests", "MethodThatThrowsError", "", 100)
+                GetStackTraceForException("Models", "CommandMethodTests", "MethodThatThrowsError", "", 39)
             };
 
 	    var actual = cm.Invoke(new List<CommandLineArgument>());
@@ -88,21 +110,5 @@ namespace NTrospection.Tests.CLI.Models
 	    Assert.AreEqual(expected, actual.WasSuccess);
 	    AssertCollectionsAreEqual(consoleLines, actual.Messages);
         }
-
-	// === Test Methods ===
-	public void MethodThatDoesNothing()
-	{
-	    // Just use for above tests to call
-	}
-	
-	public void MethodThatThrowsError()
-	{
-	    throw new Exception("I went boom!");
-	}
-	
-	public void MethodThatHasParameter(int something)
-	{
-	    throw new Exception("I went boom!");
-	}
     }
 }
