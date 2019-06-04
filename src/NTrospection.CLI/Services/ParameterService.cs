@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace NTrospection.CLI.Services
 {
@@ -25,6 +27,11 @@ namespace NTrospection.CLI.Services
 
             dynamic pVal = Convert.ChangeType(value, type);
             return pVal;
+        }
+
+	public bool IsEnumerable(Type type)
+        {
+            return typeof(IEnumerable).IsAssignableFrom(type) && type.Name != "String";
         }
     }
 }
