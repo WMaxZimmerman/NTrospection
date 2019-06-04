@@ -1,0 +1,16 @@
+* Steps to build and publish to [[www.nuget.org][NuGet]]
+- Build Project
+  dotnet build
+  - Run Tests
+    dotnet test
+  - Increment Version
+    This is a manual process of updating [[file:NTrospection.CLI.csproj][csproj]]
+    - Automation
+      IDK a dotnet way for this so... Bash?
+- Pack NuGet
+  dotnet nuget pack (This can be done on build)
+- publish NuGet
+  dotnet nuget push {PathToNupkg} -k {ApiKey} -s https://api.nuget.org/v3/index.json
+  - PathToNupkg: bin/Debug/NTrospection.CLI.{version}.nupkg
+  - version: the version number defined in [[file:NTrospection.CLI.csproj][csproj]]
+  - ApiKey: Get from [[www.nuget.org][NuGet]]

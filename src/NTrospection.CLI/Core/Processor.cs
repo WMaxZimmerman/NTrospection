@@ -85,8 +85,14 @@ namespace NTrospection.CLI.Core
                     return false;
                 }
 
-                var invokeSuccessful = controller.ExecuteCommand(arguments.Command, arguments.Arguments);
-                return invokeSuccessful;
+                var invoke = controller.ExecuteCommand(arguments.Command, arguments.Arguments);
+
+		foreach(var message in invoke.Messages)
+		{
+		    Console.WriteLine(message);
+		}
+		
+                return invoke.WasSuccess;
             }
         }
 

@@ -33,15 +33,17 @@ namespace NTrospection.CLI.Models
             if (DefaultMethod != null) Methods.Add(DefaultMethod);
         }
         
-        public bool ExecuteCommand(string commandName, List<CommandLineArgument> args)
+        public CommandResponse ExecuteCommand(string commandName, List<CommandLineArgument> args)
         {
             var command = Methods.FirstOrDefault(c => c.Name == commandName);
             if (command == null)
             {
                 if (DefaultMethod != null) return DefaultMethod.Invoke(args);
 
-                Console.WriteLine($"'{commandName}' is not a valid command.  Use '{Settings.HelpString}' to see available commands.");
-                return false;
+		var response = new CommandResponse();
+		response.Messages.Add($"'{commandName}' is not a valid command.  Use '{Settings.HelpString}' to see available commands.");
+		response.WasSuccess = false;
+		return response;
             }
 
             return command.Invoke(args);

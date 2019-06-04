@@ -75,7 +75,7 @@ namespace NTrospection.Tests.CLI.Common
             mockConsole.Clear();
             var consoleLines = new List<string>
             {
-                "An error occured while attempting to execute the command.",
+                "An error occurred while attempting to execute the command.",
                 "This is most likely due to invalid arguments.",
                 $"Please verify the command usage with '{helpString}' and try again."
             };
@@ -94,7 +94,7 @@ namespace NTrospection.Tests.CLI.Common
             {
                 "An error occurred while executing the command.",
                 "Message: I blew up yer thingy.",
-                GetStackTraceForException("ExecutionController", "ThrowExceptionMethod", 28)
+                GetStackTraceForException("App\\Controllers", "ExecutionController", "ThrowExceptionMethod", "SampleEnum sample", 28)
             };
             Processor.ProcessArguments(new[] { "execute", "exception", $"{argPre}sample", "EnumOne" });
             var temp = mockConsole.ToString();

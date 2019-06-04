@@ -2,6 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>NTrospection.CLI</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>WMaxZimmerman</Authors>
+    <Company>WMZ</Company>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageDescription>
+      A routing library for Command Line applications. Based on the routing for MVC, this library uses Controllers and Commands to correctly
+      route incoming requests. This library also provides generated usage documentation for all possible commands as well as type safety.
+    </PackageDescription>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>

@@ -20,42 +20,54 @@ namespace NTrospection.CLI.Models
             Name = GetCommandName();
         }
         
-        public bool Invoke(List<CommandLineArgument> args)
+        public CommandResponse Invoke(List<CommandLineArgument> args)
         {
+	    var response = new CommandResponse();
+
             try
             {
                 var paramList = GetParams(args);
-                if (paramList == null) return false;
+                if (paramList == null)
+		{
+		    response.WasSuccess = false;
+		}
+		else
+		{
+		    if (Info.IsStatic)
+		    {
+			Info.Invoke(null, BindingFlags.Static, null, paramList, null);
+		    }
+		    else
+		    {
+			//Execute as if not static
+			var target = Activator.CreateInstance(Info.DeclaringType);
+			Info.Invoke(target, BindingFlags.Instance, null, paramList, null);
+		    }
 
-                if (Info.IsStatic)
-                {
-                    Info.Invoke(null, BindingFlags.Static, null, paramList, null);
-                }
-                else
-                {
-                    //Execute as if not static
-                    var target = Activator.CreateInstance(Info.DeclaringType);
-                    Info.Invoke(target, BindingFlags.Instance, null, paramList, null);
-                }
-
-                return true;
+		    response.WasSuccess =  true;
+		}
             }
             catch (TargetInvocationException e)
             {
                 var inner = e.InnerException;
-                Console.WriteLine("An error occurred while executing the command.");
-                if (inner == null) return false;
-                Console.WriteLine($"Message: {inner.Message}");
-                Console.WriteLine($"Stack Trace: {inner.StackTrace.Trim()}");
-                return false;
+                response.Messages.Add("An error occurred while executing the command.");
+                if (inner != null)
+		{
+		    response.Messages.Add($"Message: {inner.Message}");
+		    response.Messages.Add($"Stack Trace: {inner.StackTrace.Trim()}");
+		}
+		
+                response.WasSuccess =  false;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine("An error occured while attempting to execute the command.");
-                Console.WriteLine("This is most likely due to invalid arguments.");
-                Console.WriteLine($"Please verify the command usage with '{Settings.HelpString}' and try again.");
-                return false;
+                response.Messages.Add("An error occurred while attempting to execute the command.");
+                response.Messages.Add("This is most likely due to invalid arguments.");
+                response.Messages.Add($"Please verify the command usage with '{Settings.HelpString}' and try again.");
+                response.WasSuccess =  false;
             }
+
+	    return response;
         }
 
         public void SetParameters(List<CommandLineArgument> args)
@@ -191,7 +203,7 @@ namespace NTrospection.CLI.Models
             return pVal;
         }
 
-        private object[] GetParams(List<CommandLineArgument> args)
+        public object[] GetParams(List<CommandLineArgument> args)
         {
             SetParameters(args);
 

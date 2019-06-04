@@ -5,6 +5,7 @@ using System.Configuration;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace NTrospection.Tests.CLI.Common
 {
@@ -42,18 +43,28 @@ namespace NTrospection.Tests.CLI.Common
         }
 
 
-	protected static string GetStackTraceForException(string className, string methodName, int line)
+	protected static string GetStackTraceForException(string relativeNamespace, string className, string methodName, string paramString, int line)
 	{
-	    var projPath = $@"NTrospection.Tests.CLI\App\Controllers\{className}";
+	    var projPath = $@"NTrospection.Tests.CLI\{relativeNamespace}\{className}";
 	    var namespacePath = projPath.Replace('\\', '.');
 	    var myPath = Directory.GetParent((new System.Uri(Assembly.GetExecutingAssembly().CodeBase)).AbsolutePath);
 	    var stackPath = myPath.Parent.Parent.Parent.Parent.FullName + $@"\{projPath}.cs";
 	    
 	    var stackTrace = @"Stack Trace: at " +
-		$@"{namespacePath}.{methodName}(SampleEnum sample) " +
+		$@"{namespacePath}.{methodName}({paramString}) " +
 		$@"in {stackPath}:line {line}";
 
 	    return stackTrace;
+	}
+
+	protected void AssertCollectionsAreEqual(List<string> expected, List<string> actual)
+	{
+	    Assert.AreEqual(expected.Count, actual.Count);
+
+	    for (var i = 0; i < expected.Count; i++)
+	    {
+		Assert.AreEqual(expected[i], actual[i]);
+	    }
 	}
 
         private void UpdateConfigValue(string key, string value)
