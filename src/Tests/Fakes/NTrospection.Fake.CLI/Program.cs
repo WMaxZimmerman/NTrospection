@@ -1,5 +1,5 @@
 ﻿using System;
-using NTrospection.CLI.Common;
+using NTrospection.CLI.Core;
 
 namespace NTrospection.Fake.CLI
 {
@@ -7,7 +7,8 @@ namespace NTrospection.Fake.CLI
     {
         static void Main(string[] args)
         {
-            Processor.ProcessArguments(args);
+	    var processor = new Processor();
+            processor.ProcessArguments(args);
         }
     }
 }

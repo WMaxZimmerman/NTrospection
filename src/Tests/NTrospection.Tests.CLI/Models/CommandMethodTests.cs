@@ -99,7 +99,8 @@ namespace NTrospection.Tests.CLI.Models
             {
                 "An error occurred while attempting to execute the command.",
                 "This is most likely due to invalid arguments.",
-                $"Please verify the command usage with '{Settings.HelpString}' and try again."
+                // $"Please verify the command usage with '{_settings.Object.HelpString()}' and try again."
+                $"Please verify the command usage with '?' and try again."
             };
 
 	    var parameter = new CommandLineArgument();

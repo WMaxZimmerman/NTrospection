@@ -13,7 +13,9 @@ namespace NTrospection.CLI.Models
         public Type ClassType { get; set; }
         public List<CommandMethod> Methods { get; set; }
         public CommandMethod DefaultMethod { get; set; }
-        
+
+	private ISettings _settings;
+	
         public Controller(Type type)
         {
             ClassType = type;
@@ -31,6 +33,8 @@ namespace NTrospection.CLI.Models
                                       .Select(c => new CommandMethod(c)).FirstOrDefault();
 
             if (DefaultMethod != null) Methods.Add(DefaultMethod);
+
+	    _settings = new Settings();
         }
         
         public CommandResponse ExecuteCommand(string commandName, List<CommandLineArgument> args)
@@ -41,7 +45,7 @@ namespace NTrospection.CLI.Models
                 if (DefaultMethod != null) return DefaultMethod.Invoke(args);
 
 		var response = new CommandResponse();
-		response.Messages.Add($"'{commandName}' is not a valid command.  Use '{Settings.HelpString}' to see available commands.");
+		response.Messages.Add($"'{commandName}' is not a valid command.  Use '{_settings.HelpString()}' to see available commands.");
 		response.WasSuccess = false;
 		return response;
             }

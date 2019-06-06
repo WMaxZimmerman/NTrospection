@@ -13,11 +13,15 @@ namespace NTrospection.CLI.Models
         public string Name { get; set; }
         public MethodInfo Info { get; set; }
         public MethodParameters Parameters { get; set; }
+
+	private ISettings _settings;
         
         public CommandMethod(MethodInfo info)
         {
             Info = info;
             Name = GetCommandName();
+
+	    _settings = new Settings();
         }
         
         public CommandResponse Invoke(List<CommandLineArgument> args)
@@ -63,7 +67,7 @@ namespace NTrospection.CLI.Models
             {
                 response.Messages.Add("An error occurred while attempting to execute the command.");
                 response.Messages.Add("This is most likely due to invalid arguments.");
-                response.Messages.Add($"Please verify the command usage with '{Settings.HelpString}' and try again.");
+                response.Messages.Add($"Please verify the command usage with '{_settings.HelpString()}' and try again.");
                 response.WasSuccess =  false;
             }
 
@@ -218,7 +222,7 @@ namespace NTrospection.CLI.Models
         private void OutputParameterDocumentation(ParameterInfo cp)
         {
             var priorityString = cp.HasDefaultValue ? "Optional" : "Required";
-            if (cp.HasDefaultValue && Settings.ParamDetail == "detailed") priorityString += $" with a default value of {cp.DefaultValue}";
+            if (cp.HasDefaultValue && _settings.ParamDetail() == "detailed") priorityString += $" with a default value of {cp.DefaultValue}";
             var type = cp.ParameterType;
             var isEnumerable = IsEnumerable(type);
             if (isEnumerable)
@@ -240,10 +244,10 @@ namespace NTrospection.CLI.Models
             var descripitionString = "";
             if (cp.GetCustomAttribute<CliParameter>() != null)
             {
-                if (cp.GetCustomAttribute<CliParameter>().Alias != default(char)) aliasString = $" | {Settings.ArgumentPrefix}{cp.GetCustomAttribute<CliParameter>().Alias}";
+                if (cp.GetCustomAttribute<CliParameter>().Alias != default(char)) aliasString = $" | {_settings.ArgumentPrefix()}{cp.GetCustomAttribute<CliParameter>().Alias}";
                 if (cp.GetCustomAttribute<CliParameter>().Description != null) descripitionString = $"Description: {cp.GetCustomAttribute<CliParameter>().Description}";
             }
-            var docString = $"{Settings.ArgumentPrefix}{cp.Name}{aliasString} ({typeString}): This parameter is {priorityString}";
+            var docString = $"{_settings.ArgumentPrefix()}{cp.Name}{aliasString} ({typeString}): This parameter is {priorityString}";
 
             if (type.IsEnum)
             {

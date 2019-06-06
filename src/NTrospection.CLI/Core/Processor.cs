@@ -7,9 +7,16 @@ using System.Reflection;
 
 namespace NTrospection.CLI.Core
 {
-    public static class Processor
+    public class Processor
     {
-        public static IEnumerable<ControllerVm> GetAllControllers(Assembly callingAssembly)
+	private ISettings _settings;
+	
+	public Processor(ISettings settings = null)
+	{
+	    _settings = settings == null ? new Settings() : settings;
+	}
+	
+        public IEnumerable<ControllerVm> GetAllControllers(Assembly callingAssembly)
         {
             var controllerList = callingAssembly.GetTypes()
                 .Where(t => Attribute.GetCustomAttributes(t).Any(a => a is CliController))
@@ -18,17 +25,17 @@ namespace NTrospection.CLI.Core
             return controllerList;
         }
         
-        public static void ProcessArguments(string[] args)
+        public void ProcessArguments(string[] args)
         {
             if (args.Length == 0)
             {
-                if (Settings.ApplicationLoopEnabled)
+                if (_settings.ApplicationLoopEnabled())
                 {
                     ApplicationLoop(Assembly.GetCallingAssembly());
                 }
                 else
                 {
-                    Console.WriteLine($"Please enter a controller.  Use '{Settings.HelpString}' to see available controllers.");
+                    Console.WriteLine($"Please enter a controller.  Use '{_settings.HelpString()}' to see available controllers.");
                     Environment.ExitCode = 1;
                 }
                 return;
@@ -41,21 +48,21 @@ namespace NTrospection.CLI.Core
             }
         }
 
-        private static void ApplicationLoop(Assembly projectAssembly)
+        private void ApplicationLoop(Assembly projectAssembly)
         {
-            Console.Write(Settings.InputIndicator + " ");
+            Console.Write(_settings.InputIndicator() + " ");
             var input = CommandLine.GetCommandLineArgs(Console.ReadLine());
 
-            while (input.Length == 0 || input[0] != Settings.ExitString)
+            while (input.Length == 0 || input[0] != _settings.ExitString())
             {
-                if (input.Length > 0) Processor.ProcessArguments(input, projectAssembly);
+                if (input.Length > 0) ProcessArguments(input, projectAssembly);
                 Console.WriteLine();
-                Console.Write(Settings.InputIndicator + " ");
+                Console.Write(_settings.InputIndicator() + " ");
                 input = CommandLine.GetCommandLineArgs(Console.ReadLine());
             }
         }
 
-        private static bool ProcessArguments(IReadOnlyList<string> args, Assembly ProjectAssembly)
+        private bool ProcessArguments(IReadOnlyList<string> args, Assembly ProjectAssembly)
         {
             var controllers = GetControllers(ProjectAssembly);
 
@@ -81,7 +88,7 @@ namespace NTrospection.CLI.Core
                 var controller = controllers.FirstOrDefault(c => c.Name == arguments.Controller);
                 if (controller == null)
                 {
-                    Console.WriteLine($"'{args[0]}' is not a valid controller.  Use '{Settings.HelpString}' to see available controllers.");
+                    Console.WriteLine($"'{args[0]}' is not a valid controller.  Use '{_settings.HelpString()}' to see available controllers.");
                     return false;
                 }
 
@@ -96,7 +103,7 @@ namespace NTrospection.CLI.Core
             }
         }
 
-        private static IEnumerable<Controller> GetControllers(Assembly callingAssembly)
+        private IEnumerable<Controller> GetControllers(Assembly callingAssembly)
         {
             var controllerList = callingAssembly.GetTypes()
                 .Where(t => Attribute.GetCustomAttributes(t).Any(a => a is CliController))
@@ -105,18 +112,18 @@ namespace NTrospection.CLI.Core
             return controllerList;
         }
 
-        private static ProcessedArguments ProcessArgs(IReadOnlyList<string> args)
+        private ProcessedArguments ProcessArgs(IReadOnlyList<string> args)
         {
             var processedArguments = new ProcessedArguments();
             var argsStart = 2;
 
             if (args.Count == 0) return processedArguments;
 
-            processedArguments.IsHelpCall = args[args.Count - 1] == Settings.HelpString;
+            processedArguments.IsHelpCall = args[args.Count - 1] == _settings.HelpString();
             processedArguments.Controller = TryGetArg(args, 0);
             processedArguments.Command = TryGetArg(args, 1);
 
-            if (processedArguments.Command?.StartsWith(Settings.ArgumentPrefix) == true)
+            if (processedArguments.Command?.StartsWith(_settings.ArgumentPrefix()) == true)
             {
                 argsStart = 1;
                 processedArguments.Command = null;
@@ -132,12 +139,12 @@ namespace NTrospection.CLI.Core
             return processedArguments;
         }
 
-        private static string TryGetArg(IReadOnlyList<string> args, int index)
+        private string TryGetArg(IReadOnlyList<string> args, int index)
         {
             try
             {
                 var arg = args[index];
-                return arg == Settings.HelpString ? null : arg;
+                return arg == _settings.HelpString() ? null : arg;
             }
             catch (Exception)
             {
@@ -145,19 +152,19 @@ namespace NTrospection.CLI.Core
             }
         }
 
-        private static IEnumerable<CommandLineArgument> SetArguments(IEnumerable<string> args)
+        private IEnumerable<CommandLineArgument> SetArguments(IEnumerable<string> args)
         {
             var arguments = new List<CommandLineArgument>();
             CommandLineArgument tempArg = null;
 
             foreach (var argument in args)
             {
-                if (argument.StartsWith(Settings.ArgumentPrefix))
+                if (argument.StartsWith(_settings.ArgumentPrefix()))
                 {
                     if (tempArg != null) arguments.Add(tempArg);
                     tempArg = new CommandLineArgument
                     {
-                        Command = argument.Replace(Settings.ArgumentPrefix, ""),
+                        Command = argument.Replace(_settings.ArgumentPrefix(), ""),
                         Order = arguments.Count + 1
                     };
                 }

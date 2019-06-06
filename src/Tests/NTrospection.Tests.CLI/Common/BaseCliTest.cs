@@ -6,6 +6,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace NTrospection.Tests.CLI.Common
 {
@@ -13,15 +14,19 @@ namespace NTrospection.Tests.CLI.Common
     {
         protected StringWriter consoleMock;
         protected StringBuilder mockConsole = new StringBuilder();
-        protected string helpString = Settings.HelpString;
-        protected string argPre = Settings.ArgumentPrefix;
+        protected string helpString = "?";
+        protected string argPre = "--";
+	protected Processor _processor;
+
+	protected Mock<ISettings> _settings;
 
         public BaseCliTest()
         {
             consoleMock = new StringWriter(mockConsole);
             Console.SetOut(consoleMock);
-            SetApplicationLoopEnabled(false);
-            SetParamDetail("simple");
+
+	    _settings = new Mock<ISettings>();
+	    _processor = new Processor();
         }
 
         protected string ConvertConsoleLinesToString(List<string> lines, bool startingNewLine = false, bool endingNewLine = true)
@@ -31,17 +36,6 @@ namespace NTrospection.Tests.CLI.Common
             if (startingNewLine) consoleString = Environment.NewLine + consoleString;
             return consoleString;
         }
-
-        protected void SetApplicationLoopEnabled(bool value)
-        {
-            UpdateConfigValue("applicationLoopEnabled", value.ToString());
-        }
-
-        protected void SetParamDetail(string detail)
-        {
-            UpdateConfigValue("paramDetail", detail);
-        }
-
 
 	protected static string GetStackTraceForException(string relativeNamespace, string className, string methodName, string paramString, int line)
 	{
@@ -66,23 +60,5 @@ namespace NTrospection.Tests.CLI.Common
 		Assert.AreEqual(expected[i], actual[i]);
 	    }
 	}
-
-        private void UpdateConfigValue(string key, string value)
-        {
-            var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            var settings = config.AppSettings.Settings;
-
-            if (settings[key] != null)
-            {
-                settings[key].Value = value;
-            }
-            else
-            {
-                settings.Add(key, value);
-            }
-
-            config.Save(ConfigurationSaveMode.Modified);
-            ConfigurationManager.RefreshSection("appsettings");
-        }
     }
 }

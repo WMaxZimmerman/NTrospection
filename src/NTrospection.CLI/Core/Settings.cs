@@ -3,18 +3,58 @@ using System.Configuration;
 
 namespace NTrospection.CLI.Core
 {
-    public static class Settings
+    public interface ISettings
     {
-        public static string HelpString = ConfigurationManager.AppSettings["helpString"] ?? "?";
+	string HelpString();
+        string ArgumentPrefix();
+        string ParamDetail();
+        string InputIndicator();
+        string ExitString();
+        bool ApplicationLoopEnabled();
+    }
 
-        public static string ArgumentPrefix = ConfigurationManager.AppSettings["argumentPrefix"] ?? "--";
+    public class Settings: ISettings
+    {
+        public string HelpString => GetAppSetting("helpString") ?? "?";
+        public string ArgumentPrefix => GetAppSetting("argumentPrefix") ?? "--";
+        public string ParamDetail => GetAppSetting("paramDetail") ?? "simple";
+        public string InputIndicator => GetAppSetting("inputIndicator") ?? ">";
+        public string ExitString => GetAppSetting("exitString") ?? "exit";
+        public bool ApplicationLoopEnabled => GetAppSetting("applicationLoopEnabled") != null && Convert.ToBoolean(GetAppSetting("applicationLoopEnabled"));
 
-        public static string ParamDetail = ConfigurationManager.AppSettings["paramDetail"] ?? "simple";
+        bool ISettings.ApplicationLoopEnabled()
+        {
+            return GetAppSetting("applicationLoopEnabled") != null && Convert.ToBoolean(GetAppSetting("applicationLoopEnabled"));
+        }
 
-        public static string InputIndicator = ConfigurationManager.AppSettings["inputIndicator"] ?? ">";
+        string ISettings.ArgumentPrefix()
+        {
+            return GetAppSetting("argumentPrefix") ?? "--";
+        }
 
-        public static string ExitString = ConfigurationManager.AppSettings["exitString"] ?? "exit";
+        string ISettings.ExitString()
+        {
+            return GetAppSetting("exitString") ?? "exit";
+        }
 
-        public static bool ApplicationLoopEnabled = ConfigurationManager.AppSettings["applicationLoopEnabled"] != null && Convert.ToBoolean(ConfigurationManager.AppSettings["applicationLoopEnabled"]);
+        string ISettings.HelpString()
+        {
+            return GetAppSetting("helpString") ?? "?";
+        }
+
+        string ISettings.InputIndicator()
+        {
+            return GetAppSetting("inputIndicator") ?? ">";
+        }
+
+        string ISettings.ParamDetail()
+        {
+            return GetAppSetting("paramDetail") ?? "simple";
+        }
+
+	private string GetAppSetting(string name)
+	{
+	    return ConfigurationManager.AppSettings[name];
+	}
     }
 }

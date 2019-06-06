@@ -19,7 +19,7 @@ namespace NTrospection.Tests.CLI.Common
                 "document - This is a test description.",
                 "execute - This is a test description."
             };
-            Processor.ProcessArguments(new[] { helpString });
+            _processor.ProcessArguments(new[] { helpString });
             var temp = mockConsole.ToString();
             var expectedString = ConvertConsoleLinesToString(consoleLines, false);
             Assert.AreEqual(expectedString, temp);
@@ -28,7 +28,6 @@ namespace NTrospection.Tests.CLI.Common
         [TestMethod]
         public void AbleToRetriveControllerDocumentation()
         {
-            SetParamDetail("simple");
             mockConsole.Clear();
             var consoleLines = new List<string>
             {
@@ -38,7 +37,7 @@ namespace NTrospection.Tests.CLI.Common
                 $"{argPre}required (String): This parameter is Required.",
                 $"{argPre}opt (Int32): This parameter is Optional."
             };
-            Processor.ProcessArguments(new[] { "document", helpString });
+            _processor.ProcessArguments(new[] { "document", helpString });
             var temp = mockConsole.ToString();
             var expectedString = ConvertConsoleLinesToString(consoleLines, true);
             Assert.AreEqual(expectedString, temp);
@@ -47,7 +46,6 @@ namespace NTrospection.Tests.CLI.Common
         [TestMethod]
         public void AbleToRetriveCommandDocumentation()
         {
-            SetParamDetail("simple");
             mockConsole.Clear();
             var consoleLines = new List<string>
             {
@@ -57,7 +55,7 @@ namespace NTrospection.Tests.CLI.Common
                 $"{argPre}required (String): This parameter is Required.",
                 $"{argPre}opt (Int32): This parameter is Optional."
             };
-            Processor.ProcessArguments(new[] { "document", "example", helpString });
+            _processor.ProcessArguments(new[] { "document", "example", helpString });
             var temp = mockConsole.ToString();
             var expectedString = ConvertConsoleLinesToString(consoleLines, true);
             Assert.AreEqual(expectedString, temp);
@@ -93,7 +91,7 @@ namespace NTrospection.Tests.CLI.Common
                 "Parameters:",
                 $"{argPre}sample (SampleEnum): This parameter is Required and must be one of the following (EnumOne, EnumTwo, EnumThree)."
             };
-            Processor.ProcessArguments(new[] { "execute", "example", helpString });
+            _processor.ProcessArguments(new[] { "execute", "example", helpString });
             var temp = mockConsole.ToString();
             var expectedString = ConvertConsoleLinesToString(consoleLines, true);
             Assert.AreEqual(expectedString, temp);
@@ -110,7 +108,7 @@ namespace NTrospection.Tests.CLI.Common
                 "Parameters:",
                 $"{argPre}sample (SampleEnum): This parameter is Required and must be one of the following (EnumOne, EnumTwo, EnumThree)."
             };
-            Processor.ProcessArguments(new[] { "execute", "nonstatic", helpString });
+            _processor.ProcessArguments(new[] { "execute", "nonstatic", helpString });
             var temp = mockConsole.ToString();
             var expectedString = ConvertConsoleLinesToString(consoleLines, true);
             Assert.AreEqual(expectedString, temp);
@@ -128,7 +126,7 @@ namespace NTrospection.Tests.CLI.Common
                 $"{argPre}values (List of SampleEnum): This parameter is Required and must be a collection of one of the following (EnumOne, EnumTwo, EnumThree).",
                 $"{argPre}something (Int32): This parameter is Required."
             };
-            Processor.ProcessArguments(new[] { "execute", "list", helpString });
+            _processor.ProcessArguments(new[] { "execute", "list", helpString });
             var temp = mockConsole.ToString();
             var expectedString = ConvertConsoleLinesToString(consoleLines, true);
             Assert.AreEqual(expectedString, temp);
@@ -146,7 +144,7 @@ namespace NTrospection.Tests.CLI.Common
                 $"{argPre}values (List of String): This parameter is Required.",
                 $"{argPre}something | {argPre}s (Int32): This parameter is Required."
             };
-            Processor.ProcessArguments(new[] { "execute", "enumerable", helpString });
+            _processor.ProcessArguments(new[] { "execute", "enumerable", helpString });
             var temp = mockConsole.ToString();
             var expectedString = ConvertConsoleLinesToString(consoleLines, true);
             Assert.AreEqual(expectedString, temp);
@@ -164,7 +162,7 @@ namespace NTrospection.Tests.CLI.Common
                 $"{argPre}something (Boolean): This parameter is Required.",
                 "Description: without-alias"
             };
-            Processor.ProcessArguments(new[] { "execute", "without-alias", helpString });
+            _processor.ProcessArguments(new[] { "execute", "without-alias", helpString });
             var temp = mockConsole.ToString();
             var expectedString = ConvertConsoleLinesToString(consoleLines, true);
             Assert.AreEqual(expectedString, temp);
@@ -183,7 +181,7 @@ namespace NTrospection.Tests.CLI.Common
                 $"{argPre}something | {argPre}s (Int32): This parameter is Required.",
                 "Description: This parameter does something."
             };
-            Processor.ProcessArguments(new[] { "execute", "array", helpString });
+            _processor.ProcessArguments(new[] { "execute", "array", helpString });
             var temp = mockConsole.ToString();
             var expectedString = ConvertConsoleLinesToString(consoleLines, true);
             Assert.AreEqual(expectedString, temp);

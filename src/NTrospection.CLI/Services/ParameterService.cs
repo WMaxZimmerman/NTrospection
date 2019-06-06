@@ -13,9 +13,12 @@ namespace NTrospection.CLI.Services
     }
     
     public class ParameterService: IParameterService
-    {        
-        public ParameterService()
+    {
+	private ISettings _settings;
+	
+        public ParameterService(ISettings settings = null)
         {
+	    _settings = settings == null ? new Settings() : settings;
         }
 
 	public dynamic GetParamValue(string value, Type type)
@@ -41,9 +44,19 @@ namespace NTrospection.CLI.Services
 	{
 	    var aliasString = "";
 	    var aliasChar = pi.GetCustomAttribute<CliParameter>()?.Alias;
-	    if (aliasChar != null && aliasChar != default(char)) aliasString = $" | {Settings.ArgumentPrefix}{aliasChar}";
+	    if (aliasChar != null && aliasChar != default(char)) aliasString = $" | {_settings.ArgumentPrefix()}{aliasChar}";
 
 	    return aliasString;
+	}
+
+	public string GetPriorityString(ParameterInfo pi)
+	{
+	    var output = pi.HasDefaultValue ? "Optional" : "Required";
+
+	    if (pi.HasDefaultValue && _settings.ParamDetail() == "detailed")
+		output += $" with a default value of {pi.DefaultValue ?? "null"}";
+	    
+	    return output;
 	}
 
 	// public List<string> GetParameterDocumentation(ParameterInfo cp)

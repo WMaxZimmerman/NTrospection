@@ -2,15 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using NTrospection.CLI.Attributes;
 using NTrospection.CLI.Core;
 using NTrospection.CLI.Services;
 using NTrospection.Tests.CLI.App.Models;
+using NTrospection.Tests.CLI.Common;
 
 namespace NTrospection.Tests.CLI.Models
 {
     [TestClass]
-    public class ParameterServiceTests
+    public class ParameterServiceTests: BaseCliTest
     {
 	const char _expectedAlias = 'b';
 	
@@ -23,7 +25,8 @@ namespace NTrospection.Tests.CLI.Models
 	public void FakeMethod(
 			       [CliParameter("sets foo")]int foo,
 			       [CliParameter(_expectedAlias, "sets bar")]int bar,
-			       string foobar)
+			       string foobar = "null",
+			       string barfoo = null)
 	{
 	    
 	}
@@ -108,7 +111,70 @@ namespace NTrospection.Tests.CLI.Models
 		.GetParameters()[1];
 	    
 	    var actual = service.GetAliasString(pi);
-	    var expected = $" | {Settings.ArgumentPrefix}{_expectedAlias}";
+	    // var expected = $" | {Settings.ArgumentPrefix}{_expectedAlias}";
+	    var expected = $" | --{_expectedAlias}";
+
+	    Assert.AreEqual(expected, actual);
+	}
+
+	[TestMethod]
+	public void GetPriorityString_ReturnsOptional_WhenParameterHasDefaultValue()
+	{	    
+	    var service = new ParameterService();
+	    var pi = typeof(ParameterServiceTests)
+		.GetMethod("FakeMethod")
+		.GetParameters()[2];
+	    
+	    var actual = service.GetPriorityString(pi);
+	    var expected = "Optional";
+
+	    Assert.AreEqual(expected, actual);
+	}
+
+	[TestMethod]
+	public void GetPriorityString_ReturnsRequired_WhenParameterHasNoDefault()
+	{	    
+	    var service = new ParameterService();
+	    var pi = typeof(ParameterServiceTests)
+		.GetMethod("FakeMethod")
+		.GetParameters()[1];
+	    
+	    var actual = service.GetPriorityString(pi);
+	    var expected = "Required";
+
+	    Assert.AreEqual(expected, actual);
+	}
+
+	[TestMethod]
+	public void GetPriorityString_ReturnsOptionalAndDefault_WhenParameterHasDefaultAndVerboseFlagSet()
+	{
+	    var mockSettings = new Mock<ISettings>();
+	    mockSettings.Setup(s => s.ParamDetail()).Returns("detailed");
+	    
+	    var service = new ParameterService(mockSettings.Object);
+	    var pi = typeof(ParameterServiceTests)
+		.GetMethod("FakeMethod")
+		.GetParameters()[2];
+	    
+	    var actual = service.GetPriorityString(pi);
+	    var expected = "Optional with a default value of null";
+
+	    Assert.AreEqual(expected, actual);
+	}
+
+	[TestMethod]
+	public void GetPriorityString_ReturnsOptionalAndDefault_WhenParameterHasDefaultAndVerboseFlagSetAndDefaultIsNull()
+	{
+	    var mockSettings = new Mock<ISettings>();
+	    mockSettings.Setup(s => s.ParamDetail()).Returns("detailed");
+	    
+	    var service = new ParameterService(mockSettings.Object);
+	    var pi = typeof(ParameterServiceTests)
+		.GetMethod("FakeMethod")
+		.GetParameters()[3];
+	    
+	    var actual = service.GetPriorityString(pi);
+	    var expected = "Optional with a default value of null";
 
 	    Assert.AreEqual(expected, actual);
 	}

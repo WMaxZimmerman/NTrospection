@@ -14,7 +14,7 @@ namespace NTrospection.Tests.CLI.Common
         {
             mockConsole.Clear();
             var consoleLines = new List<string> { "bleh 0" };
-            Processor.ProcessArguments(new[] { "document", "example", $"{argPre}required", "bleh" });
+            _processor.ProcessArguments(new[] { "document", "example", $"{argPre}required", "bleh" });
             var temp = mockConsole.ToString();
             var expectedString = ConvertConsoleLinesToString(consoleLines);
             Assert.AreEqual(expectedString, temp);
@@ -25,7 +25,7 @@ namespace NTrospection.Tests.CLI.Common
         {
             mockConsole.Clear();
             var consoleLines = new List<string> { "bleh 5" };
-            Processor.ProcessArguments(new[] { "document", "example", $"{argPre}required", "bleh", $"{argPre}opt", "5" });
+            _processor.ProcessArguments(new[] { "document", "example", $"{argPre}required", "bleh", $"{argPre}opt", "5" });
             var temp = mockConsole.ToString();
             var expectedString = ConvertConsoleLinesToString(consoleLines);
             Assert.AreEqual(expectedString, temp);
@@ -36,7 +36,7 @@ namespace NTrospection.Tests.CLI.Common
         {
             mockConsole.Clear();
             var consoleLines = new List<string> { "EnumOne" };
-            Processor.ProcessArguments(new[] { "execute", "example", $"{argPre}sample", "EnumOne" });
+            _processor.ProcessArguments(new[] { "execute", "example", $"{argPre}sample", "EnumOne" });
             var temp = mockConsole.ToString();
             var expectedString = ConvertConsoleLinesToString(consoleLines);
             Assert.AreEqual(expectedString, temp);
@@ -53,7 +53,7 @@ namespace NTrospection.Tests.CLI.Common
                 "thingTwo",
                 "3"
             };
-            Processor.ProcessArguments(new[] { "execute", "array", $"{argPre}values", "thingOne", "thingThree", "thingTwo", $"{argPre}something", "3" });
+            _processor.ProcessArguments(new[] { "execute", "array", $"{argPre}values", "thingOne", "thingThree", "thingTwo", $"{argPre}something", "3" });
             var temp = mockConsole.ToString();
             var expectedString = ConvertConsoleLinesToString(consoleLines);
             Assert.AreEqual(expectedString, temp);
@@ -70,7 +70,7 @@ namespace NTrospection.Tests.CLI.Common
                 "thingTwo",
                 "3"
             };
-            Processor.ProcessArguments(new[] { "execute", "enumerable", $"{argPre}values", "thingOne", "thingThree", "thingTwo", $"{argPre}s", "3" });
+            _processor.ProcessArguments(new[] { "execute", "enumerable", $"{argPre}values", "thingOne", "thingThree", "thingTwo", $"{argPre}s", "3" });
             var temp = mockConsole.ToString();
             var expectedString = ConvertConsoleLinesToString(consoleLines);
             Assert.AreEqual(expectedString, temp);
@@ -87,7 +87,7 @@ namespace NTrospection.Tests.CLI.Common
                 "EnumThree",
                 "3"
             };
-            Processor.ProcessArguments(new[] { "execute", "list", $"{argPre}values", "EnumTwo", "EnumOne", "EnumThree", $"{argPre}something", "3" });
+            _processor.ProcessArguments(new[] { "execute", "list", $"{argPre}values", "EnumTwo", "EnumOne", "EnumThree", $"{argPre}something", "3" });
             var temp = mockConsole.ToString();
             var expectedString = ConvertConsoleLinesToString(consoleLines);
             Assert.AreEqual(expectedString, temp);
@@ -104,7 +104,7 @@ namespace NTrospection.Tests.CLI.Common
                 "thingTwo",
                 "3"
             };
-            Processor.ProcessArguments(new[] { "execute", "enumerable", $"{argPre}values", "thingOne", "thingThree", "thingTwo", $"{argPre}something", "3" });
+            _processor.ProcessArguments(new[] { "execute", "enumerable", $"{argPre}values", "thingOne", "thingThree", "thingTwo", $"{argPre}something", "3" });
             var temp = mockConsole.ToString();
             var expectedString = ConvertConsoleLinesToString(consoleLines);
             Assert.AreEqual(expectedString, temp);
@@ -118,7 +118,7 @@ namespace NTrospection.Tests.CLI.Common
             {
                 "3"
             };
-            Processor.ProcessArguments(new[] { "execute", "array", $"{argPre}values", $"{argPre}something", "3" });
+            _processor.ProcessArguments(new[] { "execute", "array", $"{argPre}values", $"{argPre}something", "3" });
             var temp = mockConsole.ToString();
             var expectedString = ConvertConsoleLinesToString(consoleLines);
             Assert.AreEqual(expectedString, temp);
@@ -132,7 +132,7 @@ namespace NTrospection.Tests.CLI.Common
             {
                 "3"
             };
-            Processor.ProcessArguments(new[] { "execute", "list", $"{argPre}values", $"{argPre}something", "3" });
+            _processor.ProcessArguments(new[] { "execute", "list", $"{argPre}values", $"{argPre}something", "3" });
             var temp = mockConsole.ToString();
             var expectedString = ConvertConsoleLinesToString(consoleLines);
             Assert.AreEqual(expectedString, temp);
@@ -146,7 +146,7 @@ namespace NTrospection.Tests.CLI.Common
             {
                 "3"
             };
-            Processor.ProcessArguments(new[] { "execute", "enumerable", $"{argPre}values", $"{argPre}something", "3" });
+            _processor.ProcessArguments(new[] { "execute", "enumerable", $"{argPre}values", $"{argPre}something", "3" });
             var temp = mockConsole.ToString();
             var expectedString = ConvertConsoleLinesToString(consoleLines);
             Assert.AreEqual(expectedString, temp);
@@ -160,7 +160,7 @@ namespace NTrospection.Tests.CLI.Common
             {
                 "Here is some output."
             };
-            Processor.ProcessArguments(new[] { "execute", "bool", $"{argPre}withOutput" });
+            _processor.ProcessArguments(new[] { "execute", "bool", $"{argPre}withOutput" });
             var temp = mockConsole.ToString();
             var expectedString = ConvertConsoleLinesToString(consoleLines);
             Assert.AreEqual(expectedString, temp);
@@ -174,7 +174,7 @@ namespace NTrospection.Tests.CLI.Common
             {
                 "EnumOne"
             };
-            Processor.ProcessArguments(new[] { "execute", "nonstatic", $"{argPre}sample", "EnumOne" });
+            _processor.ProcessArguments(new[] { "execute", "nonstatic", $"{argPre}sample", "EnumOne" });
             var temp = mockConsole.ToString();
             var expectedString = ConvertConsoleLinesToString(consoleLines);
             Assert.AreEqual(expectedString, temp);

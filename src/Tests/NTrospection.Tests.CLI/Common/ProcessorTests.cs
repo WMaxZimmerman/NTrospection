@@ -14,7 +14,8 @@ namespace NTrospection.Tests.CLI.Common
         [TestMethod]
         public void GetAllControllersCorectlyReturnsAllControllers()
         {
-            var actualControllers = Processor.GetAllControllers(Assembly.GetExecutingAssembly()).ToList();
+	    var _processor = new Processor();
+            var actualControllers = _processor.GetAllControllers(Assembly.GetExecutingAssembly()).ToList();
             var expectedControllers = new List<ControllerVm>
             {
                 new ControllerVm(typeof(DefaultCommandController)),

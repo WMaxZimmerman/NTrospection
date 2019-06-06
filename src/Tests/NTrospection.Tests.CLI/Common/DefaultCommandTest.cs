@@ -15,7 +15,7 @@ namespace NTrospection.Tests.CLI.Common
             {
                 "Here is some output."
             };
-            Processor.ProcessArguments(new[] { "default", "bool", $"{argPre}withOutput" });
+            _processor.ProcessArguments(new[] { "default", "bool", $"{argPre}withOutput" });
             var temp = mockConsole.ToString();
             var expectedString = ConvertConsoleLinesToString(consoleLines);
             Assert.AreEqual(expectedString, temp);
@@ -29,7 +29,7 @@ namespace NTrospection.Tests.CLI.Common
             {
                 "Here is some output."
             };
-            Processor.ProcessArguments(new[] { "default", $"{argPre}withOutput" });
+            _processor.ProcessArguments(new[] { "default", $"{argPre}withOutput" });
             var temp = mockConsole.ToString();
             var expectedString = ConvertConsoleLinesToString(consoleLines);
             Assert.AreEqual(expectedString, temp);

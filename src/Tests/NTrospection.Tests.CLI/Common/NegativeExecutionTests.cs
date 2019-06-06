@@ -14,14 +14,12 @@ namespace NTrospection.Tests.CLI.Common
         [TestMethod]
         public void AbleToHandleMissingAllAguments()
         {
-            SetApplicationLoopEnabled(false);
-
             mockConsole.Clear();
             var consoleLines = new List<string>
             {
                 $"Please enter a controller.  Use '{helpString}' to see available controllers."
             };
-            Processor.ProcessArguments(new string[] { });
+            _processor.ProcessArguments(new string[] { });
             var temp = mockConsole.ToString();
             var expectedString = ConvertConsoleLinesToString(consoleLines);
             Assert.AreEqual(expectedString, temp);
@@ -35,7 +33,7 @@ namespace NTrospection.Tests.CLI.Common
             {
                 $"'' is not a valid command.  Use '{helpString}' to see available commands."
             };
-            Processor.ProcessArguments(new[] { "execute" });
+            _processor.ProcessArguments(new[] { "execute" });
             var temp = mockConsole.ToString();
             var expectedString = ConvertConsoleLinesToString(consoleLines);
             Assert.AreEqual(expectedString, temp);
@@ -49,7 +47,7 @@ namespace NTrospection.Tests.CLI.Common
             {
                 "The parameter 'sample' must be specified."
             };
-            Processor.ProcessArguments(new[] { "execute", "example" });
+            _processor.ProcessArguments(new[] { "execute", "example" });
             var temp = mockConsole.ToString();
             var expectedString = ConvertConsoleLinesToString(consoleLines);
             Assert.AreEqual(expectedString, temp);
@@ -63,7 +61,7 @@ namespace NTrospection.Tests.CLI.Common
             {
                 "The parameter 'invalidParam' is not a valid parameter."
             };
-            Processor.ProcessArguments(new[] { "execute", "example", $"{argPre}sample", "EnumOne", $"{argPre}invalidParam", "bad" });
+            _processor.ProcessArguments(new[] { "execute", "example", $"{argPre}sample", "EnumOne", $"{argPre}invalidParam", "bad" });
             var temp = mockConsole.ToString();
             var expectedString = ConvertConsoleLinesToString(consoleLines);
             Assert.AreEqual(expectedString, temp);
@@ -79,7 +77,7 @@ namespace NTrospection.Tests.CLI.Common
                 "This is most likely due to invalid arguments.",
                 $"Please verify the command usage with '{helpString}' and try again."
             };
-            Processor.ProcessArguments(new[] { "execute", "example", $"{argPre}sample", "Enum" });
+            _processor.ProcessArguments(new[] { "execute", "example", $"{argPre}sample", "Enum" });
             var temp = mockConsole.ToString();
             var expectedString = ConvertConsoleLinesToString(consoleLines);
             Assert.AreEqual(expectedString, temp);
@@ -96,7 +94,7 @@ namespace NTrospection.Tests.CLI.Common
                 "Message: I blew up yer thingy.",
                 GetStackTraceForException("App\\Controllers", "ExecutionController", "ThrowExceptionMethod", "SampleEnum sample", 28)
             };
-            Processor.ProcessArguments(new[] { "execute", "exception", $"{argPre}sample", "EnumOne" });
+            _processor.ProcessArguments(new[] { "execute", "exception", $"{argPre}sample", "EnumOne" });
             var temp = mockConsole.ToString();
             var expectedString = ConvertConsoleLinesToString(consoleLines);
             Assert.AreEqual(expectedString, temp);
