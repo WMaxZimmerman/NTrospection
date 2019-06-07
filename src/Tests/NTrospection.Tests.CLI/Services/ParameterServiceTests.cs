@@ -26,7 +26,9 @@ namespace NTrospection.Tests.CLI.Models
 			       [CliParameter("sets foo")]int foo,
 			       [CliParameter(_expectedAlias, "sets bar")]int? bar,
 			       string foobar = "null",
-			       List<int> barfoo = null)
+			       List<int> barfoo = null,
+			       SampleEnum enumb = SampleEnum.EnumOne,
+			       List<SampleEnum> enumbs = null)
 	{
 	    
 	}
@@ -244,6 +246,48 @@ namespace NTrospection.Tests.CLI.Models
 	    
 	    var actual = service.GetDescriptionString(pi);
 	    var expected = $"Description: sets foo";
+
+	    Assert.AreEqual(expected, actual);
+	}
+
+	[TestMethod]
+	public void GetDocString_ReturnsString_WhenPassedNonEnum()
+	{
+	    var service = new ParameterService();
+	    var pi = typeof(ParameterServiceTests)
+		.GetMethod("FakeMethod")
+		.GetParameters()[0];
+
+	    var actual = service.GetDocString(pi, "Required", "type", " | --f");
+	    var expected = "--foo | --f (type): This parameter is Required";
+
+	    Assert.AreEqual(expected, actual);
+	}
+
+	[TestMethod]
+	public void GetDocString_ReturnsStringWithOptions_WhenPassedEnum()
+	{
+	    var service = new ParameterService();
+	    var pi = typeof(ParameterServiceTests)
+		.GetMethod("FakeMethod")
+		.GetParameters()[4];
+
+	    var actual = service.GetDocString(pi, "Required", "type", " | --e");
+	    var expected = "--enumb | --e (type): This parameter is Required and must be one of the following (EnumOne, EnumTwo, EnumThree)";
+
+	    Assert.AreEqual(expected, actual);
+	}
+
+	[TestMethod]
+	public void GetDocString_ReturnsStringWithCollectionOptions_WhenPassedEnumCollection()
+	{
+	    var service = new ParameterService();
+	    var pi = typeof(ParameterServiceTests)
+		.GetMethod("FakeMethod")
+		.GetParameters()[5];
+
+	    var actual = service.GetDocString(pi, "Required", "type", " | --e");
+	    var expected = "--enumbs | --e (type): This parameter is Required and must be a collection of one of the following (EnumOne, EnumTwo, EnumThree)";
 
 	    Assert.AreEqual(expected, actual);
 	}

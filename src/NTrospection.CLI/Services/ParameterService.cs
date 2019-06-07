@@ -86,6 +86,29 @@ namespace NTrospection.CLI.Services
 	    return descriptionString;
 	}
 
+	public string GetDocString(ParameterInfo pi, string priority, string type, string alias)
+	{
+	    var paramType = pi.ParameterType;
+
+	    var collectionString = "";
+	    if (IsEnumerable(paramType))
+	    {
+		collectionString = "a collection of ";
+		paramType = paramType.GetGenericArguments().Length <= 0 ?
+		    paramType.GetElementType() :
+		    paramType.GenericTypeArguments[0];
+	    }
+	 
+	    var docString = $"{_settings.ArgumentPrefix()}{pi.Name}{alias} ({type}): This parameter is {priority}";   
+            if (paramType.IsEnum)
+            {
+                var names = paramType.GetEnumNames();
+                docString += $" and must be {collectionString}one of the following ({string.Join(", ", names)})";
+            }
+
+	    return docString;
+	}
+
 	public List<string> GetParameterDocumentation(ParameterInfo cp)
         {
 	    var output = new List<string>();
@@ -93,22 +116,11 @@ namespace NTrospection.CLI.Services
             var priorityString = GetPriorityString(cp);
 	    var typeString = GetTypeString(cp);
             var aliasString = GetAliasString(cp);
-            var descripitionString = GetDescriptionString(cp);
-	    
-            var docString = $"{_settings.ArgumentPrefix()}{cp.Name}{aliasString} ({typeString}): This parameter is {priorityString}";
-
-            if (cp.ParameterType.IsEnum)
-            {
-                var names = cp.ParameterType.GetEnumNames();
-                docString += $" and must be {(IsEnumerable(cp.ParameterType) ? "a collection of " : "")}one of the following ({string.Join(", ", names)}).";
-            }
-            else
-            {
-                docString += ".";
-            }
+            var docString = GetDocString(cp, priorityString, typeString, aliasString);
+            var descriptionString = GetDescriptionString(cp);
 
             output.Add(docString);
-            if (descripitionString != "") output.Add(descripitionString);
+            if (descriptionString != "") output.Add(descriptionString);
 	    
 	    return output;
         }
