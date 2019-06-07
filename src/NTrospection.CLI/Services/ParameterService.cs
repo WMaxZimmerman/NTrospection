@@ -59,6 +59,24 @@ namespace NTrospection.CLI.Services
 	    return output;
 	}
 
+	public string GetTypeString(ParameterInfo pi)
+	{
+	    var type = pi.ParameterType;
+	    
+	    if (Nullable.GetUnderlyingType(type) != null)
+		type = Nullable.GetUnderlyingType(type);
+
+	    var isEnumerable = IsEnumerable(type);
+	    if (isEnumerable)
+	    {
+		type = type.GetGenericArguments().Length <= 0 ?
+		    type.GetElementType() :
+		    type.GenericTypeArguments[0];
+	    }
+	    
+	    return $"{(isEnumerable ? "List of " : "")}{type.Name}";
+	}
+
 	// public List<string> GetParameterDocumentation(ParameterInfo cp)
         // {
 	//     var output = new List<string>();

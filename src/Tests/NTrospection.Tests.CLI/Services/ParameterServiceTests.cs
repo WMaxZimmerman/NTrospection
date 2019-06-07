@@ -24,9 +24,9 @@ namespace NTrospection.Tests.CLI.Models
 	// === Fake Method For Reflection ===
 	public void FakeMethod(
 			       [CliParameter("sets foo")]int foo,
-			       [CliParameter(_expectedAlias, "sets bar")]int bar,
+			       [CliParameter(_expectedAlias, "sets bar")]int? bar,
 			       string foobar = "null",
-			       string barfoo = null)
+			       List<int> barfoo = null)
 	{
 	    
 	}
@@ -175,6 +175,48 @@ namespace NTrospection.Tests.CLI.Models
 	    
 	    var actual = service.GetPriorityString(pi);
 	    var expected = "Optional with a default value of null";
+
+	    Assert.AreEqual(expected, actual);
+	}
+
+	[TestMethod]
+	public void GetTypeString_ReturnsNameOfType_WhenParameterIsNotCollection()
+	{
+	    var service = new ParameterService();
+	    var pi = typeof(ParameterServiceTests)
+		.GetMethod("FakeMethod")
+		.GetParameters()[0];
+	    
+	    var actual = service.GetTypeString(pi);
+	    var expected = "Int32";
+
+	    Assert.AreEqual(expected, actual);
+	}
+
+	[TestMethod]
+	public void GetTypeString_ReturnsNameOfUnderType_WhenParameterIsNotCollectionAndNullable()
+	{
+	    var service = new ParameterService();
+	    var pi = typeof(ParameterServiceTests)
+		.GetMethod("FakeMethod")
+		.GetParameters()[1];
+	    
+	    var actual = service.GetTypeString(pi);
+	    var expected = "Int32";
+
+	    Assert.AreEqual(expected, actual);
+	}
+
+	[TestMethod]
+	public void GetTypeString_ReturnsListOf_WhenParameterIsCollection()
+	{
+	    var service = new ParameterService();
+	    var pi = typeof(ParameterServiceTests)
+		.GetMethod("FakeMethod")
+		.GetParameters()[3];
+	    
+	    var actual = service.GetTypeString(pi);
+	    var expected = "List of Int32";
 
 	    Assert.AreEqual(expected, actual);
 	}
