@@ -77,51 +77,40 @@ namespace NTrospection.CLI.Services
 	    return $"{(isEnumerable ? "List of " : "")}{type.Name}";
 	}
 
-	// public List<string> GetParameterDocumentation(ParameterInfo cp)
-        // {
-	//     var output = new List<string>();
-        //     var priorityString = cp.HasDefaultValue ? "Optional" : "Required";
-        //     if (cp.HasDefaultValue && Settings.ParamDetail == "detailed") priorityString += $" with a default value of {cp.DefaultValue}";
-        //     var type = cp.ParameterType;
-        //     var isEnumerable = IsEnumerable(type);
-        //     if (isEnumerable)
-        //     {
-        //         if (type.GetGenericArguments().Length <= 0)
-        //         {
-        //             type = type.GetElementType();
-        //         }
-        //         else
-        //         {
-        //             type = type.GenericTypeArguments[0];
-        //         }
-        //     }
+	public string GetDescriptionString(ParameterInfo pi)
+	{
+	    var descriptionString = "";
+	    var description = pi.GetCustomAttribute<CliParameter>()?.Description;
+	    if (description != null) descriptionString = $"Description: {description}";
 
-        //     type = Nullable.GetUnderlyingType(type) ?? type;
+	    return descriptionString;
+	}
 
-        //     var typeString = $"{(isEnumerable ? "List of " : "")}{type.Name}";
-        //     var aliasString = "";
-        //     var descripitionString = "";
-        //     if (cp.GetCustomAttribute<CliParameter>() != null)
-        //     {
-        //         if (cp.GetCustomAttribute<CliParameter>().Alias != default(char)) aliasString = $" | {Settings.ArgumentPrefix}{cp.GetCustomAttribute<CliParameter>().Alias}";
-        //         if (cp.GetCustomAttribute<CliParameter>().Description != null) descripitionString = $"Description: {cp.GetCustomAttribute<CliParameter>().Description}";
-        //     }
-        //     var docString = $"{Settings.ArgumentPrefix}{cp.Name}{aliasString} ({typeString}): This parameter is {priorityString}";
-
-        //     if (type.IsEnum)
-        //     {
-        //         var names = type.GetEnumNames();
-        //         docString += $" and must be {(isEnumerable ? "a collection of " : "")}one of the following ({string.Join(", ", names)}).";
-        //     }
-        //     else
-        //     {
-        //         docString += ".";
-        //     }
-
-        //     output.Add(docString);
-        //     if (descripitionString != "") output.Add(descripitionString);
+	public List<string> GetParameterDocumentation(ParameterInfo cp)
+        {
+	    var output = new List<string>();
 	    
-	//     return output;
-        // }
+            var priorityString = GetPriorityString(cp);
+	    var typeString = GetTypeString(cp);
+            var aliasString = GetAliasString(cp);
+            var descripitionString = GetDescriptionString(cp);
+	    
+            var docString = $"{_settings.ArgumentPrefix()}{cp.Name}{aliasString} ({typeString}): This parameter is {priorityString}";
+
+            if (cp.ParameterType.IsEnum)
+            {
+                var names = cp.ParameterType.GetEnumNames();
+                docString += $" and must be {(IsEnumerable(cp.ParameterType) ? "a collection of " : "")}one of the following ({string.Join(", ", names)}).";
+            }
+            else
+            {
+                docString += ".";
+            }
+
+            output.Add(docString);
+            if (descripitionString != "") output.Add(descripitionString);
+	    
+	    return output;
+        }
     }
 }

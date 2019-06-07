@@ -220,5 +220,32 @@ namespace NTrospection.Tests.CLI.Models
 
 	    Assert.AreEqual(expected, actual);
 	}
+
+	[TestMethod]
+	public void GetDescriptionString_ReturnsEmptyString_WhenPassedParameterWithoutAttribute()
+	{
+	    var service = new ParameterService();
+	    var pi = typeof(ParameterServiceTests)
+		.GetMethod("FakeMethod")
+		.GetParameters()[2];
+	    
+	    var actual = service.GetDescriptionString(pi);
+
+	    Assert.AreEqual("", actual);
+	}
+
+	[TestMethod]
+	public void GetDescriptionString_ReturnsString_WhenPassedDescription()
+	{
+	    var service = new ParameterService();
+	    var pi = typeof(ParameterServiceTests)
+		.GetMethod("FakeMethod")
+		.GetParameters()[0];
+	    
+	    var actual = service.GetDescriptionString(pi);
+	    var expected = $"Description: sets foo";
+
+	    Assert.AreEqual(expected, actual);
+	}
     }
 }
