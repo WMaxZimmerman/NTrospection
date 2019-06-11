@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using NTrospection.CLI.Services;
 
 namespace NTrospection.CLI.Models
 {
@@ -15,13 +16,15 @@ namespace NTrospection.CLI.Models
         public MethodParameters Parameters { get; set; }
 
 	private ISettings _settings;
+	private IParameterService _parameterService;
         
-        public CommandMethod(MethodInfo info)
+        public CommandMethod(MethodInfo info, ISettings settings = null, IParameterService parameterService = null)
         {
+	    _settings = settings ?? new Settings();
+	    _parameterService = parameterService ?? new ParameterService();
+	    
             Info = info;
             Name = GetCommandName();
-
-	    _settings = new Settings();
         }
         
         public CommandResponse Invoke(List<CommandLineArgument> args)
@@ -114,7 +117,7 @@ namespace NTrospection.CLI.Models
 
                             foreach (var value in argument.Values)
                             {
-                                list.Add(GetParamValue(value, underType));
+                                list.Add(_parameterService.GetParamValue(value, underType));
                             }
 
                             var array = Array.CreateInstance(underType, list.Count);
@@ -130,7 +133,7 @@ namespace NTrospection.CLI.Models
 
                             foreach (var value in argument.Values)
                             {
-                                list.Add(GetParamValue(value, underType));
+                                list.Add(_parameterService.GetParamValue(value, underType));
                             }
 
                             methodParams.Parameters.Add(list);
@@ -139,12 +142,12 @@ namespace NTrospection.CLI.Models
                     else if (type.Name == "Boolean")
                     {
                         if (argument.Values.Count <= 0) argument.Values.Add("true");
-                        dynamic val = GetParamValue(argument.Values[0], parameter.ParameterType);
+                        dynamic val = _parameterService.GetParamValue(argument.Values[0], parameter.ParameterType);
                         methodParams.Parameters.Add(val);
                     }
                     else
                     {
-                        dynamic val = GetParamValue(argument.Values[0], parameter.ParameterType);
+                        dynamic val = _parameterService.GetParamValue(argument.Values[0], parameter.ParameterType);
                         methodParams.Parameters.Add(val);
                     }
                 }
@@ -183,28 +186,14 @@ namespace NTrospection.CLI.Models
                     Console.WriteLine($"Parameters:");
                     foreach (var cp in commandParams)
                     {
-                        OutputParameterDocumentation(cp);
+                        var paramDocs = _parameterService.GetParameterDocumentation(cp);
+			foreach (var pd in paramDocs)
+			{
+			    Console.WriteLine(pd);
+			}
                     }
                 }
             }
-        }
-
-        private dynamic GetParamValue(string value, Type type)
-        {
-            if (Nullable.GetUnderlyingType(type) != null)
-            {
-                var underType = Nullable.GetUnderlyingType(type);
-                dynamic val = Convert.ChangeType(value, underType);
-                return val;
-            }
-
-            if (type.IsEnum)
-            {
-                return Enum.Parse(type, value);
-            }
-
-            dynamic pVal = Convert.ChangeType(value, type);
-            return pVal;
         }
 
         public object[] GetParams(List<CommandLineArgument> args)
@@ -219,59 +208,10 @@ namespace NTrospection.CLI.Models
             return Parameters.Errors.Any() ? null : Parameters.Parameters.ToArray();
         }
 
-        private void OutputParameterDocumentation(ParameterInfo cp)
-        {
-            var priorityString = cp.HasDefaultValue ? "Optional" : "Required";
-            if (cp.HasDefaultValue && _settings.ParamDetail() == "detailed") priorityString += $" with a default value of {cp.DefaultValue}";
-            var type = cp.ParameterType;
-            var isEnumerable = IsEnumerable(type);
-            if (isEnumerable)
-            {
-                if (type.GetGenericArguments().Length <= 0)
-                {
-                    type = type.GetElementType();
-                }
-                else
-                {
-                    type = type.GenericTypeArguments[0];
-                }
-            }
-
-            type = Nullable.GetUnderlyingType(type) ?? type;
-
-            var typeString = $"{(isEnumerable ? "List of " : "")}{type.Name}";
-            var aliasString = "";
-            var descripitionString = "";
-            if (cp.GetCustomAttribute<CliParameter>() != null)
-            {
-                if (cp.GetCustomAttribute<CliParameter>().Alias != default(char)) aliasString = $" | {_settings.ArgumentPrefix()}{cp.GetCustomAttribute<CliParameter>().Alias}";
-                if (cp.GetCustomAttribute<CliParameter>().Description != null) descripitionString = $"Description: {cp.GetCustomAttribute<CliParameter>().Description}";
-            }
-            var docString = $"{_settings.ArgumentPrefix()}{cp.Name}{aliasString} ({typeString}): This parameter is {priorityString}";
-
-            if (type.IsEnum)
-            {
-                var names = type.GetEnumNames();
-                docString += $" and must be {(isEnumerable ? "a collection of " : "")}one of the following ({string.Join(", ", names)}).";
-            }
-            else
-            {
-                docString += ".";
-            }
-
-            Console.WriteLine(docString);
-            if (descripitionString != "") Console.WriteLine(descripitionString);
-        }
-
-        private bool IsEnumerable(Type type)
-        {
-            return typeof(IEnumerable).IsAssignableFrom(type) && type.Name != "String";
-        }
-
         private string GetCommandName()
         {
-            var attribute = (CliCommand)Attribute.GetCustomAttributes(Info)
-                .FirstOrDefault(a => a is CliCommand);
+            var attribute = (CliCommand)Attribute.GetCustomAttributes(Info)?
+		.FirstOrDefault(a => a is CliCommand);
 
             return attribute?.Name;
         }

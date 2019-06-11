@@ -13,7 +13,7 @@ namespace NTrospection.CLI.Core
 	
 	public Processor(ISettings settings = null)
 	{
-	    _settings = settings == null ? new Settings() : settings;
+	    _settings = settings ?? new Settings();
 	}
 	
         public IEnumerable<ControllerVm> GetAllControllers(Assembly callingAssembly)

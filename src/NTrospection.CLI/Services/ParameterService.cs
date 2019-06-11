@@ -10,6 +10,13 @@ namespace NTrospection.CLI.Services
     public interface IParameterService
     {
 	dynamic GetParamValue(string value, Type type);
+	bool IsEnumerable(Type type);
+	string GetAliasString(ParameterInfo pi);
+	string GetPriorityString(ParameterInfo pi);
+	string GetTypeString(ParameterInfo pi);
+	string GetDescriptionString(ParameterInfo pi);
+	string GetDocString(ParameterInfo pi, string priority, string type, string alias);
+	List<string> GetParameterDocumentation(ParameterInfo cp);
     }
     
     public class ParameterService: IParameterService
@@ -44,7 +51,8 @@ namespace NTrospection.CLI.Services
 	{
 	    var aliasString = "";
 	    var aliasChar = pi.GetCustomAttribute<CliParameter>()?.Alias;
-	    if (aliasChar != null && aliasChar != default(char)) aliasString = $" | {_settings.ArgumentPrefix()}{aliasChar}";
+	    if (aliasChar != null && aliasChar != default(char))
+		aliasString = $" | {_settings.ArgumentPrefix()}{aliasChar}";
 
 	    return aliasString;
 	}

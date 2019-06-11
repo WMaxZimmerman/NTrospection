@@ -34,8 +34,8 @@ namespace NTrospection.Tests.CLI.Common
                 "example",
                 "Description: This is an example description.",
                 "Parameters:",
-                $"{argPre}required (String): This parameter is Required.",
-                $"{argPre}opt (Int32): This parameter is Optional."
+                $"{argPre}required (String): This parameter is Required",
+                $"{argPre}opt (Int32): This parameter is Optional"
             };
             _processor.ProcessArguments(new[] { "document", helpString });
             var temp = mockConsole.ToString();
@@ -52,8 +52,8 @@ namespace NTrospection.Tests.CLI.Common
                 "example",
                 "Description: This is an example description.",
                 "Parameters:",
-                $"{argPre}required (String): This parameter is Required.",
-                $"{argPre}opt (Int32): This parameter is Optional."
+                $"{argPre}required (String): This parameter is Required",
+                $"{argPre}opt (Int32): This parameter is Optional"
             };
             _processor.ProcessArguments(new[] { "document", "example", helpString });
             var temp = mockConsole.ToString();
@@ -89,7 +89,7 @@ namespace NTrospection.Tests.CLI.Common
                 "example",
                 "Description: This is an example description.",
                 "Parameters:",
-                $"{argPre}sample (SampleEnum): This parameter is Required and must be one of the following (EnumOne, EnumTwo, EnumThree)."
+                $"{argPre}sample (SampleEnum): This parameter is Required and must be one of the following (EnumOne, EnumTwo, EnumThree)"
             };
             _processor.ProcessArguments(new[] { "execute", "example", helpString });
             var temp = mockConsole.ToString();
@@ -106,7 +106,7 @@ namespace NTrospection.Tests.CLI.Common
                 "nonstatic",
                 "Description: This is an example description.",
                 "Parameters:",
-                $"{argPre}sample (SampleEnum): This parameter is Required and must be one of the following (EnumOne, EnumTwo, EnumThree)."
+                $"{argPre}sample (SampleEnum): This parameter is Required and must be one of the following (EnumOne, EnumTwo, EnumThree)"
             };
             _processor.ProcessArguments(new[] { "execute", "nonstatic", helpString });
             var temp = mockConsole.ToString();
@@ -123,8 +123,8 @@ namespace NTrospection.Tests.CLI.Common
                 "list",
                 "Description: This is an example description.",
                 "Parameters:",
-                $"{argPre}values (List of SampleEnum): This parameter is Required and must be a collection of one of the following (EnumOne, EnumTwo, EnumThree).",
-                $"{argPre}something (Int32): This parameter is Required."
+                $"{argPre}values (List of SampleEnum): This parameter is Required and must be a collection of one of the following (EnumOne, EnumTwo, EnumThree)",
+                $"{argPre}something (Int32): This parameter is Required"
             };
             _processor.ProcessArguments(new[] { "execute", "list", helpString });
             var temp = mockConsole.ToString();
@@ -141,8 +141,8 @@ namespace NTrospection.Tests.CLI.Common
                 "enumerable",
                 "Description: This is an example description.",
                 "Parameters:",
-                $"{argPre}values (List of String): This parameter is Required.",
-                $"{argPre}something | {argPre}s (Int32): This parameter is Required."
+                $"{argPre}values (List of String): This parameter is Required",
+                $"{argPre}something | {argPre}s (Int32): This parameter is Required"
             };
             _processor.ProcessArguments(new[] { "execute", "enumerable", helpString });
             var temp = mockConsole.ToString();
@@ -159,7 +159,7 @@ namespace NTrospection.Tests.CLI.Common
                 "without-alias",
                 "Description: This is an example description.",
                 "Parameters:",
-                $"{argPre}something (Boolean): This parameter is Required.",
+                $"{argPre}something (Boolean): This parameter is Required",
                 "Description: without-alias"
             };
             _processor.ProcessArguments(new[] { "execute", "without-alias", helpString });
@@ -177,8 +177,8 @@ namespace NTrospection.Tests.CLI.Common
                 "array",
                 "Description: This is an example description.",
                 "Parameters:",
-                $"{argPre}values (List of String): This parameter is Required.",
-                $"{argPre}something | {argPre}s (Int32): This parameter is Required.",
+                $"{argPre}values (List of String): This parameter is Required",
+                $"{argPre}something | {argPre}s (Int32): This parameter is Required",
                 "Description: This parameter does something."
             };
             _processor.ProcessArguments(new[] { "execute", "array", helpString });
