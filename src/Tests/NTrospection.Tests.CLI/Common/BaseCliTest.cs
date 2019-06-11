@@ -39,10 +39,11 @@ namespace NTrospection.Tests.CLI.Common
 
 	protected static string GetStackTraceForException(string relativeNamespace, string className, string methodName, string paramString, int line)
 	{
-	    var projPath = $@"NTrospection.Tests.CLI\{relativeNamespace}\{className}";
-	    var namespacePath = projPath.Replace('\\', '.');
+	    var dirSep = Path.DirectorySeparatorChar;
+	    var projPath = $@"NTrospection.Tests.CLI{dirSep}{relativeNamespace}{dirSep}{className}";
+	    var namespacePath = projPath.Replace(dirSep, '.');
 	    var myPath = Directory.GetParent((new System.Uri(Assembly.GetExecutingAssembly().CodeBase)).AbsolutePath);
-	    var stackPath = myPath.Parent.Parent.Parent.Parent.FullName + $@"\{projPath}.cs";
+	    var stackPath = myPath.Parent.Parent.Parent.Parent.FullName + $@"{dirSep}{projPath}.cs";
 	    
 	    var stackTrace = @"Stack Trace: at " +
 		$@"{namespacePath}.{methodName}({paramString}) " +
