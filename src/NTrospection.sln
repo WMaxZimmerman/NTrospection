@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTrospection.Tests.CLI", "T
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Fakes", "Fakes", "{0236765A-E6B9-4393-B419-EC34231CE170}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTrospection.Fake.CLI", "tests\Fakes\NTrospection.Fake.CLI\NTrospection.Fake.CLI.csproj", "{F1D854F0-02D2-40FE-B8F2-1CF2ABA714D6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTrospection.Fake.CLI", "Tests\Fakes\NTrospection.Fake.CLI\NTrospection.Fake.CLI.csproj", "{F1D854F0-02D2-40FE-B8F2-1CF2ABA714D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
