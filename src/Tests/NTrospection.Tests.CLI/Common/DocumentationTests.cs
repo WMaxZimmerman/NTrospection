@@ -17,7 +17,8 @@ namespace NTrospection.Tests.CLI.Common
             {
                 "default - This is a test description.",
                 "document - This is a test description.",
-                "execute - This is a test description."
+                "execute - This is a test description.",
+                "fake - This is a test description."
             };
             _processor.ProcessArguments(new[] { helpString });
             var temp = mockConsole.ToString();

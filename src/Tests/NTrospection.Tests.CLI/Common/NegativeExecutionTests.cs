@@ -45,7 +45,7 @@ namespace NTrospection.Tests.CLI.Common
             mockConsole.Clear();
             var consoleLines = new List<string>
             {
-                "The parameter 'sample' must be specified."
+                "The parameter 'sample' must be specified"
             };
             _processor.ProcessArguments(new[] { "execute", "example" });
             var temp = mockConsole.ToString();
@@ -59,7 +59,7 @@ namespace NTrospection.Tests.CLI.Common
             mockConsole.Clear();
             var consoleLines = new List<string>
             {
-                "The parameter 'invalidParam' is not a valid parameter."
+                "The parameter 'invalidParam' is not a valid parameter"
             };
             _processor.ProcessArguments(new[] { "execute", "example", $"{argPre}sample", "EnumOne", $"{argPre}invalidParam", "bad" });
             var temp = mockConsole.ToString();

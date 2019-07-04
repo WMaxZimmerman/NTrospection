@@ -20,7 +20,8 @@ namespace NTrospection.Tests.CLI.Common
             {
                 new ControllerVm(typeof(DefaultCommandController)),
                 new ControllerVm(typeof(DocumentationController)),
-                new ControllerVm(typeof(ExecutionController))
+                new ControllerVm(typeof(ExecutionController)),
+                new ControllerVm(typeof(FakeController))
             };
 
             Assert.AreEqual(expectedControllers.Count, actualControllers.Count);

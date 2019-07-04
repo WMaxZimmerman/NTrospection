@@ -9,7 +9,7 @@ namespace NTrospection.CLI.Models
         
         public CommandResponse()
         {
-	    Messages = new List<string>();
+            Messages = new List<string>();
         }
     }
 }

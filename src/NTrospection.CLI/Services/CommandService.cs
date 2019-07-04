@@ -1,152 +1,129 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using NTrospection.CLI.Attributes;
+using NTrospection.CLI.Core;
 using NTrospection.CLI.Models;
 
 namespace NTrospection.CLI.Services
 {
-    public class CommandService
+    public interface ICommandService
     {
-	private IParameterService _parameterService;
-	
-        public CommandService(IParameterService parameterService = null)
+        string GetCommandName(MethodInfo info);
+        object[] GetParameters(MethodInfo info, List<CommandLineArgument> args);
+        void OutputDocumentation(MethodInfo info);
+        CommandResponse Invoke(MethodInfo info, List<CommandLineArgument> args);
+    }
+
+    public class CommandService : ICommandService
+    {
+        private IParameterService _parameterService;
+        private IMethodService _methodService;
+        private IConsoleService _consoleService;
+        private ISettings _settings;
+
+        public CommandService(IParameterService parameterService = null,
+                              IMethodService methodService = null,
+                              IConsoleService consoleService = null,
+                              ISettings settings = null)
         {
-	    _parameterService = parameterService ?? new ParameterService();
+            _parameterService = parameterService ?? new ParameterService();
+            _methodService = methodService ?? new MethodService();
+            _consoleService = consoleService ?? new ConsoleService();
+            _settings = settings ?? new Settings();
         }
 
-	public string GetCommandName(CommandMethod command)
-	{
-	    var attribute = (CliCommand)Attribute.GetCustomAttributes(command.Info)
-                .FirstOrDefault(a => a is CliCommand);
+        public string GetCommandName(MethodInfo info)
+        {
+            var attribute = (CliCommand)Attribute.GetCustomAttributes(info)
+                    .FirstOrDefault(a => a is CliCommand);
 
             return attribute?.Name;
-	}
+        }
 
-	public List<string> GetParameterErrors(CommandMethod command, List<CommandLineArgument> args)
-	{
-	    var errors = new List<string>();
-	    var arguments = args.Where(a => command.Info.GetParameters()
-				       .All(p => p.Name != a.Command && p.GetCustomAttribute<CliParameter>()?.Alias.ToString() != a.Command));
-	    
-	    foreach (var argument in arguments)
+        public object[] GetParameters(MethodInfo info, List<CommandLineArgument> args)
+        {
+            var parameters = _methodService.GetParameters(info, args);
+
+            foreach (var error in parameters.Errors)
             {
-                errors.Add($"The parameter '{argument.Command}' is not a valid parameter");
+                _consoleService.WriteLine(error);
             }
 
-	    return errors;
-	}
+            return parameters.Errors.Any() ? null : parameters.Parameters.ToArray();
+        }
 
-	public bool ParameterMatchesArg(CommandMethod command, ParameterInfo pi, CommandLineArgument arg)
-	{
-	    var isPresent = true;
-	    
-	    if (arg.Command.ToLower() != pi.Name.ToLower())
-	    {
-		var paramAttribute = pi.GetCustomAttribute<CliParameter>();
-		if (paramAttribute != null)
-		{
-		    if (paramAttribute.Alias.ToString().ToLower() != arg.Command.ToLower()) isPresent = false;
-		}
-		else
-		{
-		    isPresent = false;
-		}
-	    }
-	    
-	    return isPresent;
-	}
+        public void OutputDocumentation(MethodInfo info)
+        {
+            var attribute = (CliCommand)Attribute.GetCustomAttributes(info)?.FirstOrDefault(a => a is CliCommand);
+            if (attribute == null) return;
 
-	// public void SetParameters(List<CommandLineArgument> args)
-        // {
-        //     var methodParams = new MethodParameters();
+            _consoleService.WriteLine("");
+            _consoleService.WriteLine($"{attribute.Name}");
+            _consoleService.WriteLine($"Description: {attribute.Description}");
+            var commandParams = info.GetParameters();
+            if (commandParams.Length > 0)
+            {
+                _consoleService.WriteLine($"Parameters:");
+                foreach (var cp in commandParams)
+                {
+                    var paramDocs = _parameterService.GetParameterDocumentation(cp);
+                    foreach (var pd in paramDocs)
+                    {
+                        _consoleService.WriteLine(pd);
+                    }
+                }
+            }
+        }
 
-        //     foreach (var argument in args.Where(a => Info.GetParameters().All(p => p.Name != a.Command && p.GetCustomAttribute<CliParameter>()?.Alias.ToString() != a.Command)))
-        //     {
-        //         methodParams.Errors.Add($"The parameter '{argument.Command}' is not a valid parameter.");
-        //     }
+        public CommandResponse Invoke(MethodInfo info, List<CommandLineArgument> args)
+        {
+            var response = new CommandResponse();
 
-        //     foreach (var parameter in Info.GetParameters())
-        //     {
-        //         var wasFound = false;
-        //         foreach (var argument in args)
-        //         {
-        //             if (argument.Command.ToLower() != parameter.Name.ToLower())
-        //             {
-        //                 var paramAttribute = parameter.GetCustomAttribute<CliParameter>();
-        //                 if (paramAttribute != null)
-        //                 {
-        //                     if (paramAttribute.Alias.ToString().ToLower() != argument.Command.ToLower()) continue;
-        //                 }
-        //                 else
-        //                 {
-        //                     continue;
-        //                 }
-        //             }
-        //             wasFound = true;
+            try
+            {
+                var paramList = GetParameters(info, args);
+                if (paramList == null)
+                {
+                    response.WasSuccess = false;
+                }
+                else
+                {
+                    if (info.IsStatic)
+                    {
+                        _methodService.InvokeStatic(info, paramList);
+                    }
+                    else
+                    {
+                        _methodService.InvokeInstance(info, paramList);
+                    }
 
-        //             var type = parameter.ParameterType;
+                    response.WasSuccess =  true;
+                }
+            }
+            catch (TargetInvocationException e)
+            {
+                response.Messages.Add("An error occurred while executing the command.");
+                var inner = e.InnerException;
+                if (inner != null)
+            	{
+            	    response.Messages.Add($"Message: {inner.Message}");
+            	    response.Messages.Add($"Stack Trace: {inner.StackTrace.Trim()}");
+            	}
 
-        //             if (typeof(IEnumerable).IsAssignableFrom(type) && type.Name != "String")
-        //             {
-        //                 if (type.GetGenericArguments().Length <= 0)
-        //                 {
-        //                     var underType = type.GetElementType();
-        //                     var listType = typeof(List<>).MakeGenericType(underType);
-        //                     var list = (IList)Activator.CreateInstance(listType);
+                response.WasSuccess =  false;
+            }
+            catch (Exception e)
+            {
+                response.Messages.Add("An error occurred while attempting to execute the command.");
+                response.Messages.Add("This is most likely due to invalid arguments.");
+                response.Messages.Add($"Please verify the command usage with '{_settings.HelpString()}' and try again.");
+                response.WasSuccess =  false;
+            }
 
-        //                     foreach (var value in argument.Values)
-        //                     {
-        //                         list.Add(_parameterService.GetParamValue(value, underType));
-        //                     }
-
-        //                     var array = Array.CreateInstance(underType, list.Count);
-        //                     list.CopyTo(array, 0);
-
-        //                     methodParams.Parameters.Add(array);
-        //                 }
-        //                 else
-        //                 {
-        //                     var underType = type.GenericTypeArguments[0];
-        //                     var listType = typeof(List<>).MakeGenericType(underType);
-        //                     var list = (IList)Activator.CreateInstance(listType);
-
-        //                     foreach (var value in argument.Values)
-        //                     {
-        //                         list.Add(_parameterService.GetParamValue(value, underType));
-        //                     }
-
-        //                     methodParams.Parameters.Add(list);
-        //                 }
-        //             }
-        //             else if (type.Name == "Boolean")
-        //             {
-        //                 if (argument.Values.Count <= 0) argument.Values.Add("true");
-        //                 dynamic val = _parameterService.GetParamValue(argument.Values[0], parameter.ParameterType);
-        //                 methodParams.Parameters.Add(val);
-        //             }
-        //             else
-        //             {
-        //                 dynamic val = _parameterService.GetParamValue(argument.Values[0], parameter.ParameterType);
-        //                 methodParams.Parameters.Add(val);
-        //             }
-        //         }
-
-        //         if (!wasFound)
-        //         {
-        //             if (parameter.HasDefaultValue)
-        //             {
-        //                 methodParams.Parameters.Add(parameter.DefaultValue);
-        //             }
-        //             else
-        //             {
-        //                 methodParams.Errors.Add($"The parameter '{parameter.Name}' must be specified.");
-        //             }
-        //         }
-        //     }
-
-        //     Parameters = methodParams;
-        // }
+            return response;
+        }
     }
 }

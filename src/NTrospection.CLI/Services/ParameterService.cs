@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using NTrospection.CLI.Core;
 using NTrospection.CLI.Attributes;
+using NTrospection.CLI.Models;
+using System.Linq;
 
 namespace NTrospection.CLI.Services
 {
@@ -17,6 +19,11 @@ namespace NTrospection.CLI.Services
 	string GetDescriptionString(ParameterInfo pi);
 	string GetDocString(ParameterInfo pi, string priority, string type, string alias);
 	List<string> GetParameterDocumentation(ParameterInfo cp);
+	List<string> GetParameterErrors(MethodInfo info, List<CommandLineArgument> args);
+	bool ParameterMatchesArg(ParameterInfo pi, CommandLineArgument arg);
+	dynamic GetCollectionValues(ParameterInfo pi, CommandLineArgument arg);
+	bool GetBoolValue(ParameterInfo pi, CommandLineArgument arg);
+	dynamic GetParameterValue(ParameterInfo pi, CommandLineArgument arg);
     }
     
     public class ParameterService: IParameterService
@@ -132,5 +139,90 @@ namespace NTrospection.CLI.Services
 	    
 	    return output;
         }
+
+	
+
+	public List<string> GetParameterErrors(MethodInfo info, List<CommandLineArgument> args)
+	{
+	    var errors = new List<string>();
+	    var arguments = args.Where(a => info.GetParameters()
+				       .All(p => p.Name != a.Command
+					    && p.GetCustomAttribute<CliParameter>()?.Alias.ToString() != a.Command));
+	    
+	    foreach (var argument in arguments)
+            {
+                errors.Add($"The parameter '{argument.Command}' is not a valid parameter");
+            }
+
+	    return errors;
+	}
+
+	public bool ParameterMatchesArg(ParameterInfo pi, CommandLineArgument arg)
+	{
+	    var isPresent = true;
+	    
+	    if (arg.Command.ToLower() != pi.Name.ToLower())
+	    {
+		var paramAttribute = pi.GetCustomAttribute<CliParameter>();
+		if (paramAttribute != null)
+		{
+		    if (paramAttribute.Alias.ToString().ToLower() != arg.Command.ToLower()) isPresent = false;
+		}
+		else
+		{
+		    isPresent = false;
+		}
+	    }
+	    
+	    return isPresent;
+	}
+
+	public dynamic GetCollectionValues(ParameterInfo pi, CommandLineArgument arg)
+	{
+	    var type = pi.ParameterType;
+
+	    var isArray = type.GetGenericArguments().Length <= 0;
+	    var underType = isArray ? type.GetElementType() : type.GenericTypeArguments[0];
+	    var listType = typeof(List<>).MakeGenericType(underType);
+	    var list = (IList)Activator.CreateInstance(listType);
+
+	    foreach (var value in arg.Values)
+	    {
+		list.Add(GetParamValue(value, underType));
+	    }
+	    
+	    var array = Array.CreateInstance(underType, list.Count);
+	    list.CopyTo(array, 0);
+	    
+	    return isArray ? Convert.ChangeType(array, type) : list;
+	}
+
+	public bool GetBoolValue(ParameterInfo pi, CommandLineArgument arg)
+	{
+	    if (arg.Values.Count <= 0) arg.Values.Add("true");
+	    bool val = GetParamValue(arg.Values[0], pi.ParameterType);
+	    return val;
+	}
+
+	public dynamic GetParameterValue(ParameterInfo pi, CommandLineArgument arg)
+	{
+	    var type = pi.ParameterType;
+	    dynamic val = null;
+
+	    if (typeof(IEnumerable).IsAssignableFrom(type) && type.Name != "String")
+	    {
+	    	val = GetCollectionValues(pi, arg);
+	    }
+	    else if (type.Name == "Boolean")
+	    {
+	    	val = GetBoolValue(pi, arg);
+	    }
+	    else
+	    {
+	    	val = GetParamValue(arg.Values[0], pi.ParameterType);
+	    }
+	    
+	    return val;
+	}
     }
 }
