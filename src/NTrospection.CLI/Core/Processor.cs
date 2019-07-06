@@ -1,5 +1,6 @@
 using NTrospection.CLI.Attributes;
 using NTrospection.CLI.Models;
+using NTrospection.CLI.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +10,15 @@ namespace NTrospection.CLI.Core
 {
     public class Processor
     {
-	private ISettings _settings;
-	
-	public Processor(ISettings settings = null)
-	{
-	    _settings = settings ?? new Settings();
-	}
-	
+        private ISettings _settings;
+        private IControllerService _controllerService;
+
+        public Processor(ISettings settings = null, IControllerService controllerService = null)
+        {
+            _settings = settings ?? new Settings();
+            _controllerService = controllerService ?? new ControllerService();
+        }
+
         public IEnumerable<ControllerVm> GetAllControllers(Assembly callingAssembly)
         {
             var controllerList = callingAssembly.GetTypes()
@@ -24,7 +27,7 @@ namespace NTrospection.CLI.Core
 
             return controllerList;
         }
-        
+
         public void ProcessArguments(string[] args)
         {
             if (args.Length == 0)
@@ -75,12 +78,12 @@ namespace NTrospection.CLI.Core
                 {
                     foreach (var c in controllers)
                     {
-                        c.OutputDocumentation();
+                        _controllerService.OutputDocumentation(c);
                     }
                     return true;
                 }
 
-                controller.DocumentCommand(arguments.Command);
+                _controllerService.DocumentCommand(controller, arguments.Command);
                 return true;
             }
             else
@@ -92,13 +95,13 @@ namespace NTrospection.CLI.Core
                     return false;
                 }
 
-                var invoke = controller.ExecuteCommand(arguments.Command, arguments.Arguments);
+                var invoke = _controllerService.ExecuteCommand(controller, arguments.Command, arguments.Arguments);
 
-		foreach(var message in invoke.Messages)
-		{
-		    Console.WriteLine(message);
-		}
-		
+                foreach (var message in invoke.Messages)
+                {
+                    Console.WriteLine(message);
+                }
+
                 return invoke.WasSuccess;
             }
         }

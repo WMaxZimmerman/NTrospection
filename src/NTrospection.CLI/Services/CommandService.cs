@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -115,7 +114,7 @@ namespace NTrospection.CLI.Services
 
                 response.WasSuccess =  false;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 response.Messages.Add("An error occurred while attempting to execute the command.");
                 response.Messages.Add("This is most likely due to invalid arguments.");
