@@ -5,7 +5,7 @@ namespace NTrospection.CLI.Core
 {
     public interface ISettings
     {
-	string HelpString();
+        string HelpString();
         string ArgumentPrefix();
         string ParamDetail();
         string InputIndicator();
@@ -13,7 +13,7 @@ namespace NTrospection.CLI.Core
         bool ApplicationLoopEnabled();
     }
 
-    public class Settings: ISettings
+    public class Settings : ISettings
     {
         public string HelpString => GetAppSetting("helpString") ?? "?";
         public string ArgumentPrefix => GetAppSetting("argumentPrefix") ?? "--";
@@ -52,9 +52,9 @@ namespace NTrospection.CLI.Core
             return GetAppSetting("paramDetail") ?? "simple";
         }
 
-	private string GetAppSetting(string name)
-	{
-	    return ConfigurationManager.AppSettings[name];
-	}
+        private string GetAppSetting(string name)
+        {
+            return ConfigurationManager.AppSettings[name];
+        }
     }
 }
