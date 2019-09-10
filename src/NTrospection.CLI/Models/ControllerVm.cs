@@ -32,5 +32,17 @@ namespace NTrospection.CLI.Models
 
             return attribute?.Name;
         }
+
+        public override bool Equals(Object o)
+        {
+            return o is ControllerVm ? Equals((ControllerVm) o) : false;
+        }
+
+        public bool Equals(ControllerVm o)
+        {
+            return this.Name == o.Name
+                && this.ClassType == o.ClassType
+                && this.Methods.Count == o.Methods.Count;
+        }
     }
 }

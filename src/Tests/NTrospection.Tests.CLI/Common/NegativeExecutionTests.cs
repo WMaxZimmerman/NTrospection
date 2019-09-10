@@ -1,10 +1,6 @@
-using System;
 using System.IO;
-using System.Reflection;
 using System.Collections.Generic;
-using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NTrospection.CLI.Core;
 
 namespace NTrospection.Tests.CLI.Common
 {
@@ -17,7 +13,7 @@ namespace NTrospection.Tests.CLI.Common
             mockConsole.Clear();
             var consoleLines = new List<string>
             {
-                $"Please enter a controller.  Use '{helpString}' to see available controllers."
+                $"Please enter a controller. Use '{helpString}' to see available controllers."
             };
             _processor.ProcessArguments(new string[] { });
             var temp = mockConsole.ToString();

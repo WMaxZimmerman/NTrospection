@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NTrospection.CLI.Models
 {
@@ -14,6 +15,19 @@ namespace NTrospection.CLI.Models
             Controller = null;
             Command = null;
             Arguments = new List<CommandLineArgument>();
+        }
+
+        public override bool Equals(object o)
+        {
+            return o is ProcessedArguments ? Equals((ProcessedArguments) o) : false;
+        }
+
+        private bool Equals(ProcessedArguments o)
+        {
+            return this.Controller == o.Controller
+                && this.Command == o.Command
+                && this.Arguments.SequenceEqual(o.Arguments)
+                && this.IsHelpCall == o.IsHelpCall;
         }
     }
 }

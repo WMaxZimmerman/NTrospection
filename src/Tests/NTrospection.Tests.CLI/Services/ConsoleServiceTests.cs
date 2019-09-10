@@ -31,5 +31,15 @@ namespace NTrospection.Tests.CLI.Services
 
             Assert.AreEqual(expectedMessage, mockConsole.ToString());
         }
+
+        [TestMethod]
+        public void Write_OutputsLineToConsole()
+        {
+            var message = "hello world";
+            var expectedMessage = message;
+            _service.Write(message);
+
+            Assert.AreEqual(expectedMessage, mockConsole.ToString());
+        }
     }
 }

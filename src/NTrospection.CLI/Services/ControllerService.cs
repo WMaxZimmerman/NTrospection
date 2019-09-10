@@ -10,6 +10,7 @@ namespace NTrospection.CLI.Services
 {
     public interface IControllerService
     {
+        IEnumerable<Controller> GetControllers(Assembly callingAssembly);
         List<CommandMethod> GetCommandMethods(Controller controller);
         CommandMethod GetDefaultCommandMethod(Controller controller);
         CommandResponse ExecuteCommand(Controller controller, string commandName, List<CommandLineArgument> args);
@@ -31,6 +32,15 @@ namespace NTrospection.CLI.Services
             _settings = settings ?? new Settings();
             _console = console ?? new ConsoleService();
             _commandService = commandService ?? new CommandService();
+        }
+
+        public IEnumerable<Controller> GetControllers(Assembly callingAssembly)
+        {
+            var controllerList = callingAssembly.GetTypes()
+                .Where(t => Attribute.GetCustomAttributes(t).Any(a => a is CliController))
+                .Select(t => new Controller(t));
+
+            return controllerList;
         }
 
         public List<CommandMethod> GetCommandMethods(Controller controller)

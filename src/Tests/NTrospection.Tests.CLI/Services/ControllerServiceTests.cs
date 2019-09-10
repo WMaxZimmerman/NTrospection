@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -235,6 +237,75 @@ namespace NTrospection.Tests.CLI.Services
             var actual = _service.GetDefaultCommandMethod(controller);
 
             Assert.IsNull(actual);
+        }
+
+        [TestMethod]
+        public void GetAllControllers_ReturnsEmptyList_WhenNoTypesReturned()
+        {
+            var expected = new List<Controller>();
+            var mockAssembly = new Mock<Assembly>();
+            mockAssembly.Setup(m => m.GetTypes()).Returns(new Type[]{});
+
+            var actual = _service.GetControllers(mockAssembly.Object).ToList();
+
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void GetAllControllers_ReturnsEmptyList_WhenNoCliControllersReturned()
+        {
+            var expected = new List<Controller>();
+            var mockAssembly = new Mock<Assembly>();
+            mockAssembly.Setup(m => m.GetTypes()).Returns(new Type[]
+                    {
+                        typeof(NonController),
+                        typeof(ControllerServiceTests)
+                    });
+
+            var actual = _service.GetControllers(mockAssembly.Object).ToList();
+
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void GetAllControllers_ReturnsListOfControllers_WhenCliControllers()
+        {
+            var expected = new List<Controller>()
+                {
+                    new Controller(typeof(FakeController)),
+                    new Controller(typeof(DefaultCommandController))
+                };
+            var mockAssembly = new Mock<Assembly>();
+            mockAssembly.Setup(m => m.GetTypes()).Returns(new Type[]
+                    {
+                        typeof(FakeController),
+                        typeof(DefaultCommandController)
+                    });
+
+            var actual = _service.GetControllers(mockAssembly.Object).ToList();
+
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void GetAllControllers_OnlyReturnsListOfControllers_WhenCliControllers()
+        {
+            var expected = new List<Controller>()
+                {
+                    new Controller(typeof(FakeController)),
+                    new Controller(typeof(DefaultCommandController))
+                };
+            var mockAssembly = new Mock<Assembly>();
+            mockAssembly.Setup(m => m.GetTypes()).Returns(new Type[]
+                    {
+                        typeof(FakeController),
+                        typeof(DefaultCommandController),
+                        typeof(NonController)
+                    });
+
+            var actual = _service.GetControllers(mockAssembly.Object).ToList();
+
+            CollectionAssert.AreEqual(expected, actual);
         }
     }
 }
