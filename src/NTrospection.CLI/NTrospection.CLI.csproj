@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>NTrospection.CLI</PackageId>
-    <Version>1.0.0</Version>
+    <Version>2.0.0</Version>
     <Authors>WMaxZimmerman</Authors>
     <Company>WMZ</Company>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
