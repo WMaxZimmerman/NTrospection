@@ -53,20 +53,20 @@ A controller in NTrospection.CLI is simply a class that is able to be accessed f
 controller you just need to add the attribute 'CliController' to a public static class. This will let NTrospection.CLI 
 know that it is a controller. When creating the attribute it is good to note that it has two parameters:
 
-** Name
+- Name
 The name of the controller and the command line argument to be entered to access the controller.
-** Description
+- Description
 A description of the functionality provided by the controller. This can be output via the help function in a terminal.
 
 * Commands
 A command is a method that can be accessed by NTrospection.CLI. Similar to controllers this must be a public static 
 method and will need to have the attribute 'CliCommand'. This attribute also has two parameters just like its controller 
 counterpart.
-** Name
+- Name
 The name of command and the command line argument to be entered to access the command.
-** Description    
+- Description    
 A description of the functionality of the method. This can be output via the help function in a terminal.
-** NOTE
+- NOTE
 If you have async processes in your method you should use a Wait/Result if you need the application to wait before 
 returning.
 
