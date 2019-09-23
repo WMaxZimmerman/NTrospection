@@ -25,24 +25,12 @@ then this is a library you should absolutely starting using.
 To start using NTrospection.CLI there are two routes (three if you include pulling down this source code) that you can 
 take.
 
-* Using The Template
-The easiest way to start using NTrospection.CLI is to install [this template](https://marketplace.visualstudio.com/items?itemName=wmaxzimmerman.NTrospection.CLICLI01). 
-After you have installed the template you can use it to create a new project. That project will have all of the needed 
-boiler plate to be able to start creating a NTrospection.CLI application. If you go this route you will probably notice 
-how light the template really is.  The 'Program.cs' file only has only line of added code (Not including usings) and 
-there is only one additional class. That class can be found in the 'Controllers' folder and will be name 
-'ExampleController.cs'. This class is designed to be an example of how you can setup controllers and commands for the 
-NTrospection.CLI framework. If you need more information than the examples provided in the code you can read on here.
+* How To Use It
+To setup NTrospection.CLI manually you will need to first install [[https://www.nuget.org/packages/NTrospection.CLI][this nuget package]]. Now that we have the nuget package 
+ready we will want to update 'Program.cs' file. Inside of the 'Main' method of the 'Program.cs' you will want to add 
+this line:
 
-* The Hard Way
-If you already have an exisitng Console Application or you just hate super easy and convenient templates, you can setup 
-the boiler plate manually with limited effort. To setup NTrospection.CLI manually you will need to first install 
-[this nuget package](https://www.nuget.org/packages/WMZ.NTrospection.CLI/). Now that we have the nuget package ready we 
-will want to update 'Program.cs' file. Inside of the 'Main' method of the 'Program.cs' you will want to add this line:
-
-```
-Processor.ProcessArgs(args);
-```
+src_<c++>{new Processor().ProcessArgs(args);}
 
 This will send all of your command line arguments to NTrospection.CLI to be validated and processed. Once we have that 
 done we have finished all of the boiler plate for NTrospection.CLI. Now we can move on to writing the code for your 
