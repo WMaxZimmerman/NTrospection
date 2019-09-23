@@ -31,7 +31,7 @@ ready we will want to update 'Program.cs' file. Inside of the 'Main' method of t
 this line:
 
 #+NAME: Process Args
-#+BEGIN_SRC c++ 
+#+BEGIN_SRC csharp
   new Processor().ProcessArgs(args);
 #+END_SRC
 
@@ -69,7 +69,7 @@ execution. NTrospection.CLI is smart enough to know what types your parameters a
 documentation when prompted via the help function. This include the name of the parameter, its type, weither it is 
 optional or required (based on if it has a default value), and even its possible options if it is an enum. That is a lot 
 of working and ridiculous wiring that you no longer have to do!  However, if you do want to add a bit more details to 
-your paramters you can use the "CliParamter" attribute. This attribute allows you to specify an alias and description 
+your parameters you can use the "CliParamter" attribute. This attribute allows you to specify an alias and description 
 for a parameter. Currently the alias is required to be passed to the constructor and the description is optional. If 
 specified the description will be output when the help command is used. You are also able to change the "paramDetail" 
 config value to "detailed". If you do, you will also be able to see what value was assigned as a default for optional 
@@ -83,9 +83,10 @@ Once you have setup the boiler plate and have at least one controller and method
 you can build your executable and navigate to it in a terminal and start to run your application. To execute your code 
 you will use the pattern:
 
-```
-<yourprogam.exe> <controller> <command> --<parameter> <value>
-```
+#+NAME: Example Call
+#+BEGIN_SRC sh
+  <yourprogam.exe> <controller> <command> --<parameter> <value>
+#+END_SRC
 
 Notice the '--' infront of the <parameter>. This is the format that lets NTrospection.CLI know when a paramter starts 
 and will add the following arguments to it as values. It is good to know that if you have a List/Array/IEnumerable as 
@@ -94,9 +95,9 @@ only get the first value assigned and the others will be ignored.
 
 * Error Handling
 You might be thinking, "That all sounds great, but what if it recieves bad input?" NTrospection.CLI is setup to handle 
-invalid input gracefully.  It will valid all of the inputs before even attempting to execute your code, and if any of 
+invalid input gracefully.  It will validate all of the inputs before even attempting to execute your code, and if any of 
 the inputs violate type or arguments it will notify the user and stop any further execution before reaching your code. 
-NTrospection.CLI will also gracefully handle errors that might happen in your code (Not that that would happen cause 
+NTrospection.CLI will also gracefully handle errors that might happen in your code (Not that that would happen because 
 your code is flawless). If an error occurs in your code it will output the error message and the stack trace to the 
 terminal.
 
@@ -113,14 +114,15 @@ performing several different command for your application.
 If you don't like the defaults that I setup you can change the 'helpString' and the 'argumentPrefix' in the 'App.config' 
 file. To do this simply add these lines:
 
-```
-<add key="helpString" value="?" />
-<add key="argumentPrefix" value="--" />
-<add key="paramDetail" value="simple" />
-<add key="applicationLoopEnabled" value="true" />
-<add key="inputIndicator" value=">" />
-<add key="exitString" value="exit" />
-```
+#+NAME: Example Config
+#+BEGIN_SRC xml
+  <add key="helpString" value="?" />
+  <add key="argumentPrefix" value="--" />
+  <add key="paramDetail" value="simple" />
+  <add key="applicationLoopEnabled" value="true" />
+  <add key="inputIndicator" value=">" />
+  <add key="exitString" value="exit" />
+#+END_SRC
 
 If you don't have an 'appsettings' section of your 'App.config' you can simply add one and then add the lines there. You 
 should keep in mind that if you change these values then some of this documentation may no longer apply as it assumes 
@@ -129,22 +131,24 @@ you are using the defaults.
 * Hello World
 
 Program.cs:  
-  
-```  
-using NTrospection.CLI.Core;  
-  
-public class Program  
-{  
-  public method Main(string[] args)  
-  {  
-     Processor.ProcessArgs(args);  
-  }  
-}  
-```  
+
+#+NAME: Example Program.cs
+#+BEGIN_SRC csharp
+using NTrospection.CLI.Core;
+
+public class Program
+{
+  public method Main(string[] args)
+  {
+     new Processor().ProcessArgs(args);
+  }
+}
+#+END_SRC
 
 Controller:  
-  
-```  
+
+#+NAME: Example Controller
+#+BEGIN_SRC csharp
 using NTrospection.CLI.Attributes;  
   
 [CliController("example", "this is the description")]  
@@ -156,9 +160,10 @@ public static class ExampleController
     System.Console.WriteLine("Hello, " + name);  
   }  
 }  
-```  
- Usage:
- 
- ```
- helloworld.exe example command --name World  
- ```
+#+END_SRC
+
+Usage:
+#+NAME: Example Usage
+#+BEGIN_SRC sh
+helloworld.exe example command --name World    
+#+END_SRC
