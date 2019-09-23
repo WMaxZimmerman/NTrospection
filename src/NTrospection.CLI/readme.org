@@ -30,7 +30,10 @@ To setup NTrospection.CLI manually you will need to first install [[https://www.
 ready we will want to update 'Program.cs' file. Inside of the 'Main' method of the 'Program.cs' you will want to add 
 this line:
 
-src_<c++>{new Processor().ProcessArgs(args);}
+#+NAME: Process Args
+#+BEGIN_SRC c++ 
+  new Processor().ProcessArgs(args);
+#+END_SRC
 
 This will send all of your command line arguments to NTrospection.CLI to be validated and processed. Once we have that 
 done we have finished all of the boiler plate for NTrospection.CLI. Now we can move on to writing the code for your 
