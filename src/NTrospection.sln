@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Fakes", "Fakes", "{0236765A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTrospection.Fake.CLI", "Tests\Fakes\NTrospection.Fake.CLI\NTrospection.Fake.CLI.csproj", "{F1D854F0-02D2-40FE-B8F2-1CF2ABA714D6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTrospection.API", "NTrospection.API\NTrospection.API.csproj", "{62806742-B424-4EA6-B821-13CA250E7CDB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,6 +64,18 @@ Global
 		{F1D854F0-02D2-40FE-B8F2-1CF2ABA714D6}.Release|x64.Build.0 = Release|Any CPU
 		{F1D854F0-02D2-40FE-B8F2-1CF2ABA714D6}.Release|x86.ActiveCfg = Release|Any CPU
 		{F1D854F0-02D2-40FE-B8F2-1CF2ABA714D6}.Release|x86.Build.0 = Release|Any CPU
+		{62806742-B424-4EA6-B821-13CA250E7CDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62806742-B424-4EA6-B821-13CA250E7CDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62806742-B424-4EA6-B821-13CA250E7CDB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{62806742-B424-4EA6-B821-13CA250E7CDB}.Debug|x64.Build.0 = Debug|Any CPU
+		{62806742-B424-4EA6-B821-13CA250E7CDB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{62806742-B424-4EA6-B821-13CA250E7CDB}.Debug|x86.Build.0 = Debug|Any CPU
+		{62806742-B424-4EA6-B821-13CA250E7CDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62806742-B424-4EA6-B821-13CA250E7CDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62806742-B424-4EA6-B821-13CA250E7CDB}.Release|x64.ActiveCfg = Release|Any CPU
+		{62806742-B424-4EA6-B821-13CA250E7CDB}.Release|x64.Build.0 = Release|Any CPU
+		{62806742-B424-4EA6-B821-13CA250E7CDB}.Release|x86.ActiveCfg = Release|Any CPU
+		{62806742-B424-4EA6-B821-13CA250E7CDB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{DFEAA352-9A5D-4480-B226-9E145EAC0BFE} = {E20BABC1-03DD-4528-89D0-BA7DE3F2DC08}
