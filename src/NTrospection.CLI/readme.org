@@ -190,8 +190,7 @@ public static class ExampleController
 // This is just to show the out of the program
 public static void ShowOutput(string inputs)
 {
-    Console.WriteLine($"==== input: '{inputs}' ====");
-    Console.WriteLine($"==== output ====");
+    Console.WriteLine($"==== Paramters: '{inputs}' ====");
     var inputArgs = inputs.Split(" ").ToArray();
     Program.Main(inputArgs);
     Console.WriteLine();
@@ -211,13 +210,11 @@ ShowOutput("example hello --name");
 - Output ::
 #+RESULTS: Complete-Hello-World-Examples
 #+begin_example
-==== input: '?' ====
-==== output ====
+==== Paramters: '?' ====
 example - a container for example commands
 
 
-==== input: 'example ?' ====
-==== output ====
+==== Paramters: 'example ?' ====
 
 hello
 Description: says 'Hello' to the given name
@@ -230,8 +227,7 @@ Parameters:
 --name (String): This parameter is Optional
 
 
-==== input: 'example hello ?' ====
-==== output ====
+==== Paramters: 'example hello ?' ====
 
 hello
 Description: says 'Hello' to the given name
@@ -239,19 +235,16 @@ Parameters:
 --name (String): This parameter is Required
 
 
-==== input: 'example hello --name World' ====
-==== output ====
+==== Paramters: 'example hello --name World' ====
 Hello, World
 
 
-==== input: 'example hello --neeem World' ====
-==== output ====
+==== Paramters: 'example hello --neeem World' ====
 The parameter 'neeem' is not a valid parameter
 The parameter 'name' must be specified
 
 
-==== input: 'example hello --name' ====
-==== output ====
+==== Paramters: 'example hello --name' ====
 An error occurred while attempting to execute the command.
 This is most likely due to invalid arguments.
 Please verify the command usage with '?' and try again.
