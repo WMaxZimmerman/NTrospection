@@ -36,7 +36,7 @@ take.
 
 * How To Use It
 To setup NTrospection.CLI manually you will need to first install [[https://www.nuget.org/packages/NTrospection.CLI][this nuget package]]. Now that we have the nuget package 
-ready we will want to update 'Program.cs' file. Inside of the 'Main' method of the 'Program.cs' you will want to add 
+ready we will want to update =Program.cs= file. Inside of the =Main= method of the =Program.cs= you will want to add 
 this line:
 
 #+NAME: Process Args
@@ -112,7 +112,7 @@ you will use the pattern:
   <yourprogam> <controller> <command> --<parameter> <value>
 #+END_SRC
 
-Notice the =--= infront of the =<parameter>=. This is the format that lets NTrospection.CLI know when a paramter starts 
+Notice the =--= in front of the =<parameter>=. This is the format that lets NTrospection.CLI know when a paramter starts 
 and will add the following arguments to it as values. It is good to know that if you have a List/Array/IEnumerable as 
 your type that it will pass in all values until the next parameter. If the parameter is not a IEnumerable than it will 
 only get the first value assigned and the others will be ignored.
