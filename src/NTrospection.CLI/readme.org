@@ -1,16 +1,25 @@
 * Steps to build and publish to [[www.nuget.org][NuGet]]
 - Build Project
   dotnet build
-  - Run Tests
+  - Run Tests ::
+    #+begin_src sh
     dotnet test
+    #+end_src
+    
   - Increment Version
     This is a manual process of updating [[file:NTrospection.CLI.csproj][csproj]]
     - Automation
       IDK a dotnet way for this so... Bash?
-- Pack NuGet
-  dotnet nuget pack (This can be done on build)
-- publish NuGet
-  dotnet nuget push {PathToNupkg} -k {ApiKey} -s https://api.nuget.org/v3/index.json
+- Pack NuGet ::
+  #+begin_src sh
+  dotnet nuget pack 
+  #+end_src
+  
+- publish NuGet ::
+  #+begin_src python
+   dotnet nuget push {PathToNupkg} -k {ApiKey} -s https://api.nuget.org/v3/index.json
+  #+end_src
+ 
   - PathToNupkg: bin/Debug/NTrospection.CLI.{version}.nupkg
   - version: the version number defined in [[file:NTrospection.CLI.csproj][csproj]]
   - ApiKey: Get from [[www.nuget.org][NuGet]]
@@ -32,7 +41,21 @@ this line:
 
 #+NAME: Process Args
 #+BEGIN_SRC csharp
-  new Processor().ProcessArgs(args);
+#r "nuget:NTrospection.CLI,2.0.0"
+
+using NTrospection.CLI.Core;
+using NTrospection.CLI.Attributes;
+
+namespace YourApplication.Console
+{
+    public class Program
+    {
+        public void Main(string[] args)
+	{
+	    new Processor().ProcessArguments(args);
+	}
+    }
+}
 #+END_SRC
 
 This will send all of your command line arguments to NTrospection.CLI to be validated and processed. Once we have that 
@@ -41,39 +64,40 @@ application.
 
 * Controllers
 A controller in NTrospection.CLI is simply a class that is able to be accessed from the command line. To create a 
-controller you just need to add the attribute 'CliController' to a public static class. This will let NTrospection.CLI 
-know that it is a controller. When creating the attribute it is good to note that it has two parameters:
+controller you just need to add the attribute =CliController= to a public class. This will let NTrospection.CLI 
+know that it is a controller. When creating the attribute it is good to note that it has the following two parameters.
 
-- Name
-The name of the controller and the command line argument to be entered to access the controller.
-- Description
-A description of the functionality provided by the controller. This can be output via the help function in a terminal.
+- Name ::
+  The name of the controller and the command line argument to be entered to access the controller.
+- Description ::
+  A description of the functionality provided by the controller. This can be output via the help function in a terminal.
 
 * Commands
-A command is a method that can be accessed by NTrospection.CLI. Similar to controllers this must be a public static 
-method and will need to have the attribute 'CliCommand'. This attribute also has two parameters just like its controller 
+A command is a method that can be accessed by NTrospection.CLI. Similar to controllers this must be a public method and 
+will need to have the attribute =CliCommand=. This attribute also has two parameters just like its controller 
 counterpart.
-- Name
-The name of command and the command line argument to be entered to access the command.
-- Description    
-A description of the functionality of the method. This can be output via the help function in a terminal.
-- NOTE
-If you have async processes in your method you should use a Wait/Result if you need the application to wait before 
-returning.
+- Name ::
+  The name of command and the command line argument to be entered to access the command.
+- Description ::
+  A description of the functionality of the method. This can be output via the help function in a terminal.
+- NOTE ::
+  If you have async processes in your method you should use a Wait/Result if you need the application to wait before 
+  returning.
 
 * Parameters
 To wire in your parameters you have to do... nothing. Yes, nothing. No more if/select statements to decide a code path. 
 Simiply put the parameters in the method like normal and let NTrospection.CLI handle the rest. NTrospection.CLI will use 
-the variable name that you set in your code as the input for the terminal as well as provide you type safetly during 
+the variable name that you set in your code as the input for the terminal as well as provide you type safety during 
 execution. NTrospection.CLI is smart enough to know what types your parameters are and will output all possible 
-documentation when prompted via the help function. This include the name of the parameter, its type, weither it is 
-optional or required (based on if it has a default value), and even its possible options if it is an enum. That is a lot 
-of working and ridiculous wiring that you no longer have to do!  However, if you do want to add a bit more details to 
-your parameters you can use the "CliParamter" attribute. This attribute allows you to specify an alias and description 
-for a parameter. Currently the alias is required to be passed to the constructor and the description is optional. If 
-specified the description will be output when the help command is used. You are also able to change the "paramDetail" 
-config value to "detailed". If you do, you will also be able to see what value was assigned as a default for optional 
-parameters.
+documentation when prompted via the help function. This includes the name of the parameter, its type, if it is optional 
+or required (based on if it has a default value), and even its possible options if it is an enum. That is a lot of work 
+and ridiculous wiring that you no longer have to do! And, you can even add more details to the parameters, if you want.
+
+To add more details to your parameters you can use the =CliParameter= attribute. This attribute allows you to specify an 
+alias and description for a parameter. Currently the alias is required to be passed to the constructor and the 
+description is optional. If specified the description will be output when the help command is used. You are also able to 
+change the =paramDetail= config value to =detailed=. If you do, you will also be able to see what value was assigned as 
+a default for optional parameters.
 
 One special case is when you have a boolean argument. You are now able to use just the argument without specifying a 
 value. If you do this the value will be set as true.
@@ -83,12 +107,12 @@ Once you have setup the boiler plate and have at least one controller and method
 you can build your executable and navigate to it in a terminal and start to run your application. To execute your code 
 you will use the pattern:
 
-#+NAME: Example Call
+#+NAME: Example-Call
 #+BEGIN_SRC sh
-  <yourprogam.exe> <controller> <command> --<parameter> <value>
+  <yourprogam> <controller> <command> --<parameter> <value>
 #+END_SRC
 
-Notice the '--' infront of the <parameter>. This is the format that lets NTrospection.CLI know when a paramter starts 
+Notice the =--= infront of the =<parameter>=. This is the format that lets NTrospection.CLI know when a paramter starts 
 and will add the following arguments to it as values. It is good to know that if you have a List/Array/IEnumerable as 
 your type that it will pass in all values until the next parameter. If the parameter is not a IEnumerable than it will 
 only get the first value assigned and the others will be ignored.
@@ -102,17 +126,17 @@ your code is flawless). If an error occurs in your code it will output the error
 terminal.
 
 * Application Loop
-You can also enable the application loop for you project. To do so you will need to add the "applicationLoopEnabled" key 
-to your appsettings section of your config with a value of "true". After you have done this your application is setup to 
-use the Application Loop. But, what is the Application Loop you may be asking. The Application Loop is where you execute 
+You can also enable the application loop for you project. To do so you will need to add the =applicationLoopEnabled= key 
+to your appsettings section of your config with a value of =true=. After you have done this your application is setup to 
+use the Application Loop. "But, what is the Application Loop?", you ask. The Application Loop is where you execute 
 your application with no parameters. This puts you into a loop that keeps you in the context of your application until 
-you pass it the exit string "exit". This will allow you to not have to continue executing new instances of your 
-application, and will allow you to leave off the application part of calls.  This is mostly useful when you will be 
+you pass it the exit string (=exit= by default). This will allow you to not have to continue executing new instances of 
+your application, and will allow you to leave off the application part of calls.  This is mostly useful when you will be 
 performing several different command for your application.
 
 * Configuration
-If you don't like the defaults that I setup you can change the 'helpString' and the 'argumentPrefix' in the 'App.config' 
-file. To do this simply add these lines:
+If you don't like the defaults that I setup you can change the =helpString= and the =argumentPrefix= or any other value
+in the =App.config= file. To do this simply add these lines to the =appsettings= section of the your config.
 
 #+NAME: Example Config
 #+BEGIN_SRC xml
@@ -124,7 +148,7 @@ file. To do this simply add these lines:
   <add key="exitString" value="exit" />
 #+END_SRC
 
-If you don't have an 'appsettings' section of your 'App.config' you can simply add one and then add the lines there. You 
+If you don't have an =appsettings= section of your =App.config= you can simply add one and then add the lines there. You 
 should keep in mind that if you change these values then some of this documentation may no longer apply as it assumes 
 you are using the defaults.
 
@@ -132,38 +156,94 @@ you are using the defaults.
 
 Program.cs:  
 
-#+NAME: Example Program.cs
-#+BEGIN_SRC csharp
-using NTrospection.CLI.Core;
+#+NAME: Complete-Hello-World-Examples
+#+BEGIN_SRC csharp :results value verbatim
+#r "nuget:NTrospection.CLI,2.0.0"
 
-public class Program
+using System;
+using NTrospection.CLI.Core;
+using NTrospection.CLI.Attributes;
+
+public static class Program
 {
-  public method Main(string[] args)
+  public static void Main(string[] args)
   {
-     new Processor().ProcessArgs(args);
+     new Processor().ProcessArguments(args);
   }
 }
-#+END_SRC
-
-Controller:  
-
-#+NAME: Example Controller
-#+BEGIN_SRC csharp
-using NTrospection.CLI.Attributes;  
   
-[CliController("example", "this is the description")]  
-public static class ExampleController  
-{  
-  [CliCommand("command", "this is the description for the command")]  
-  public static void MethodToBeExecuted(string name)  
-  {  
-    System.Console.WriteLine("Hello, " + name);  
-  }  
-}  
+[CliController("example", "a container for example commands")]
+public static class ExampleController
+{
+  [CliCommand("hello", "says 'Hello' to the given name")]
+  public static void HelloWorld(string name)
+  {
+    System.Console.WriteLine("Hello, " + name);
+  }
+
+  [CliCommand("goodbye", "says 'Good-bye' to the given name")]
+  public static void GoodbyeWorld(string name = "World")
+  {
+    System.Console.WriteLine("Good-bye, " + name);
+  }
+}
+
+Console.WriteLine("==== Command Execution ====");
+var inputArgs = new string[]{"example", "hello", "--name", "World"};
+Program.Main(inputArgs);
+Console.WriteLine("==== Command Execution ====");
+
+Console.WriteLine();
+
+Console.WriteLine("==== Command Help ====");
+inputArgs = new string[]{"example", "hello", "--name", "World", "?"};
+Program.Main(inputArgs);
+Console.WriteLine("==== Command Help ====");
+
+Console.WriteLine();
+
+Console.WriteLine("==== Controller Help ====");
+inputArgs = new string[]{"example", "?"};
+Program.Main(inputArgs);
+Console.WriteLine("==== Controller Help ====");
+
+Console.WriteLine();
+
+Console.WriteLine("==== Program Help ====");
+inputArgs = new string[]{"?"};
+Program.Main(inputArgs);
+Console.WriteLine("==== Program Help ====");
+
 #+END_SRC
 
-Usage:
-#+NAME: Example Usage
-#+BEGIN_SRC sh
-helloworld.exe example command --name World    
-#+END_SRC
+#+RESULTS: Complete-Hello-World-Examples
+#+begin_example
+==== Command Execution ====
+Hello, World
+==== Command Execution ====
+
+==== Command Help ====
+
+hello
+Description: says 'Hello' to the given name
+Parameters:
+--name (String): This parameter is Required
+==== Command Help ====
+
+==== Controller Help ====
+
+hello
+Description: says 'Hello' to the given name
+Parameters:
+--name (String): This parameter is Required
+
+goodbye
+Description: says 'Good-bye' to the given name
+Parameters:
+--name (String): This parameter is Optional
+==== Controller Help ====
+
+==== Program Help ====
+example - a container for example commands
+==== Program Help ====
+#+end_example
