@@ -191,7 +191,9 @@ public static class ExampleController
 public static void ShowOutput(string title, string inputs)
 {
     var banner = $"==== {title} ====";
+    var paramString = $"==== Parameters: {inputs} ====";
     Console.WriteLine(banner);
+    Console.WriteLine(paramString);
     var inputArgs = inputs.Split(" ").ToArray();
     Program.Main(inputArgs);
     Console.WriteLine(banner);
@@ -212,10 +214,12 @@ ShowOutput("Invalid Parameter Type", "example hello --name");
 #+RESULTS: Complete-Hello-World-Examples
 #+begin_example
 ==== Program Help ====
+==== Parameters: ? ====
 example - a container for example commands
 ==== Program Help ====
 
 ==== Controller Help ====
+==== Parameters: example ? ====
 
 hello
 Description: says 'Hello' to the given name
@@ -229,6 +233,7 @@ Parameters:
 ==== Controller Help ====
 
 ==== Command Help ====
+==== Parameters: example hello ? ====
 
 hello
 Description: says 'Hello' to the given name
@@ -237,15 +242,18 @@ Parameters:
 ==== Command Help ====
 
 ==== Command Execution ====
+==== Parameters: example hello --name World ====
 Hello, World
 ==== Command Execution ====
 
 ==== Invalid Parameter Name ====
+==== Parameters: example hello --neeem World ====
 The parameter 'neeem' is not a valid parameter
 The parameter 'name' must be specified
 ==== Invalid Parameter Name ====
 
 ==== Invalid Parameter Type ====
+==== Parameters: example hello --name ====
 An error occurred while attempting to execute the command.
 This is most likely due to invalid arguments.
 Please verify the command usage with '?' and try again.
