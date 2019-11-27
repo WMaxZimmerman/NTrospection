@@ -188,38 +188,36 @@ public static class ExampleController
 }
 
 // This is just to show the out of the program
-public static void ShowOutput(string title, string inputs)
+public static void ShowOutput(string inputs)
 {
-    var banner = $"==== {title} ====";
-    var paramString = $"==== Parameters: {inputs} ====";
-    Console.WriteLine(banner);
-    Console.WriteLine(paramString);
+    Console.WriteLine($"==== input: '{inputs}' ====");
+    Console.WriteLine($"==== output ====");
     var inputArgs = inputs.Split(" ").ToArray();
     Program.Main(inputArgs);
-    Console.WriteLine(banner);
+    Console.WriteLine();
     Console.WriteLine();
 }
 
 
-ShowOutput("Program Help", "?");
-ShowOutput("Controller Help", "example ?");
-ShowOutput("Command Help", "example hello ?");
-ShowOutput("Command Execution", "example hello --name World");
-ShowOutput("Invalid Parameter Name", "example hello --neeem World");
-ShowOutput("Invalid Parameter Type", "example hello --name");
+ShowOutput("?");
+ShowOutput("example ?");
+ShowOutput("example hello ?");
+ShowOutput("example hello --name World");
+ShowOutput("example hello --neeem World");
+ShowOutput("example hello --name");
 
 #+END_SRC
 
 - Output ::
 #+RESULTS: Complete-Hello-World-Examples
 #+begin_example
-==== Program Help ====
-==== Parameters: ? ====
+==== input: '?' ====
+==== output ====
 example - a container for example commands
-==== Program Help ====
 
-==== Controller Help ====
-==== Parameters: example ? ====
+
+==== input: 'example ?' ====
+==== output ====
 
 hello
 Description: says 'Hello' to the given name
@@ -230,33 +228,33 @@ goodbye
 Description: says 'Good-bye' to the given name
 Parameters:
 --name (String): This parameter is Optional
-==== Controller Help ====
 
-==== Command Help ====
-==== Parameters: example hello ? ====
+
+==== input: 'example hello ?' ====
+==== output ====
 
 hello
 Description: says 'Hello' to the given name
 Parameters:
 --name (String): This parameter is Required
-==== Command Help ====
 
-==== Command Execution ====
-==== Parameters: example hello --name World ====
+
+==== input: 'example hello --name World' ====
+==== output ====
 Hello, World
-==== Command Execution ====
 
-==== Invalid Parameter Name ====
-==== Parameters: example hello --neeem World ====
+
+==== input: 'example hello --neeem World' ====
+==== output ====
 The parameter 'neeem' is not a valid parameter
 The parameter 'name' must be specified
-==== Invalid Parameter Name ====
 
-==== Invalid Parameter Type ====
-==== Parameters: example hello --name ====
+
+==== input: 'example hello --name' ====
+==== output ====
 An error occurred while attempting to execute the command.
 This is most likely due to invalid arguments.
 Please verify the command usage with '?' and try again.
-==== Invalid Parameter Type ====
+
 
 #+end_example
