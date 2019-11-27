@@ -157,7 +157,7 @@ you are using the defaults.
 Program.cs:  
 
 #+NAME: Complete-Hello-World-Examples
-#+BEGIN_SRC csharp :results value verbatim
+#+BEGIN_SRC csharp :results value verbatim :exports both
 #r "nuget:NTrospection.CLI,2.0.0"
 
 using System;
