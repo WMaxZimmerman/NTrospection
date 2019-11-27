@@ -154,8 +154,7 @@ you are using the defaults.
 
 * Hello World
 
-Program.cs:  
-
+- Code ::
 #+NAME: Complete-Hello-World-Examples
 #+BEGIN_SRC csharp :results value verbatim :exports both
 #r "nuget:NTrospection.CLI,2.0.0"
@@ -188,17 +187,10 @@ public static class ExampleController
   }
 }
 
-Console.WriteLine("==== Command Execution ====");
-var inputArgs = new string[]{"example", "hello", "--name", "World"};
+Console.WriteLine("==== Program Help ====");
+var inputArgs = new string[]{"?"};
 Program.Main(inputArgs);
-Console.WriteLine("==== Command Execution ====");
-
-Console.WriteLine();
-
-Console.WriteLine("==== Command Help ====");
-inputArgs = new string[]{"example", "hello", "--name", "World", "?"};
-Program.Main(inputArgs);
-Console.WriteLine("==== Command Help ====");
+Console.WriteLine("==== Program Help ====");
 
 Console.WriteLine();
 
@@ -209,26 +201,40 @@ Console.WriteLine("==== Controller Help ====");
 
 Console.WriteLine();
 
-Console.WriteLine("==== Program Help ====");
-inputArgs = new string[]{"?"};
+Console.WriteLine("==== Command Help ====");
+inputArgs = new string[]{"example", "hello", "?"};
 Program.Main(inputArgs);
-Console.WriteLine("==== Program Help ====");
+Console.WriteLine("==== Command Help ====");
+
+Console.WriteLine();
+
+Console.WriteLine("==== Command Execution ====");
+inputArgs = new string[]{"example", "hello", "--name", "World"};
+Program.Main(inputArgs);
+Console.WriteLine("==== Command Execution ====");
+
+Console.WriteLine();
+
+Console.WriteLine("==== Invalid Parameter Name ====");
+inputArgs = new string[]{"example", "hello", "--neeeem", "World"};
+Program.Main(inputArgs);
+Console.WriteLine("==== Invalid Parameter Name ====");
+
+Console.WriteLine();
+
+Console.WriteLine("==== Invalid Parameter Type ====");
+inputArgs = new string[]{"example", "hello", "--name"};
+Program.Main(inputArgs);
+Console.WriteLine("==== Invalid Parameter Name ====");
 
 #+END_SRC
 
+- Output ::
 #+RESULTS: Complete-Hello-World-Examples
 #+begin_example
-==== Command Execution ====
-Hello, World
-==== Command Execution ====
-
-==== Command Help ====
-
-hello
-Description: says 'Hello' to the given name
-Parameters:
---name (String): This parameter is Required
-==== Command Help ====
+==== Program Help ====
+example - a container for example commands
+==== Program Help ====
 
 ==== Controller Help ====
 
@@ -243,7 +249,26 @@ Parameters:
 --name (String): This parameter is Optional
 ==== Controller Help ====
 
-==== Program Help ====
-example - a container for example commands
-==== Program Help ====
+==== Command Help ====
+
+hello
+Description: says 'Hello' to the given name
+Parameters:
+--name (String): This parameter is Required
+==== Command Help ====
+
+==== Command Execution ====
+Hello, World
+==== Command Execution ====
+
+==== Invalid Parameter Name ====
+The parameter 'neeeem' is not a valid parameter
+The parameter 'name' must be specified
+==== Invalid Parameter Name ====
+
+==== Invalid Parameter Type ====
+An error occurred while attempting to execute the command.
+This is most likely due to invalid arguments.
+Please verify the command usage with '?' and try again.
+==== Invalid Parameter Name ====
 #+end_example
