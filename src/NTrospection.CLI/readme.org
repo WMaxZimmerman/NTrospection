@@ -187,45 +187,24 @@ public static class ExampleController
   }
 }
 
-Console.WriteLine("==== Program Help ====");
-var inputArgs = new string[]{"?"};
-Program.Main(inputArgs);
-Console.WriteLine("==== Program Help ====");
+// This is just to show the out of the program
+public static void ShowOutput(string title, string inputs)
+{
+    var banner = $"==== {title} ====";
+    Console.WriteLine(banner);
+    var inputArgs = inputs.Split(" ").ToArray();
+    Program.Main(inputArgs);
+    Console.WriteLine(banner);
+    Console.WriteLine();
+}
 
-Console.WriteLine();
 
-Console.WriteLine("==== Controller Help ====");
-inputArgs = new string[]{"example", "?"};
-Program.Main(inputArgs);
-Console.WriteLine("==== Controller Help ====");
-
-Console.WriteLine();
-
-Console.WriteLine("==== Command Help ====");
-inputArgs = new string[]{"example", "hello", "?"};
-Program.Main(inputArgs);
-Console.WriteLine("==== Command Help ====");
-
-Console.WriteLine();
-
-Console.WriteLine("==== Command Execution ====");
-inputArgs = new string[]{"example", "hello", "--name", "World"};
-Program.Main(inputArgs);
-Console.WriteLine("==== Command Execution ====");
-
-Console.WriteLine();
-
-Console.WriteLine("==== Invalid Parameter Name ====");
-inputArgs = new string[]{"example", "hello", "--neeeem", "World"};
-Program.Main(inputArgs);
-Console.WriteLine("==== Invalid Parameter Name ====");
-
-Console.WriteLine();
-
-Console.WriteLine("==== Invalid Parameter Type ====");
-inputArgs = new string[]{"example", "hello", "--name"};
-Program.Main(inputArgs);
-Console.WriteLine("==== Invalid Parameter Name ====");
+ShowOutput("Program Help", "?");
+ShowOutput("Controller Help", "example ?");
+ShowOutput("Command Help", "example hello ?");
+ShowOutput("Command Execution", "example hello --name World");
+ShowOutput("Invalid Parameter Name", "example hello --neeem World");
+ShowOutput("Invalid Parameter Type", "example hello --name");
 
 #+END_SRC
 
@@ -262,7 +241,7 @@ Hello, World
 ==== Command Execution ====
 
 ==== Invalid Parameter Name ====
-The parameter 'neeeem' is not a valid parameter
+The parameter 'neeem' is not a valid parameter
 The parameter 'name' must be specified
 ==== Invalid Parameter Name ====
 
@@ -270,5 +249,6 @@ The parameter 'name' must be specified
 An error occurred while attempting to execute the command.
 This is most likely due to invalid arguments.
 Please verify the command usage with '?' and try again.
-==== Invalid Parameter Name ====
+==== Invalid Parameter Type ====
+
 #+end_example
