@@ -16,7 +16,7 @@ namespace NTrospection.Tests.CLI.Repositories
         private Mock<ISettings> _mockSettings;
 
         private string _help = "?";
-        private string _pre = "-";
+        private string _pre = "--";
         
         [TestInitialize]
         public void Init()

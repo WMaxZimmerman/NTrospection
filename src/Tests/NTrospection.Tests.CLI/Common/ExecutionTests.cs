@@ -11,27 +11,27 @@ namespace NTrospection.Tests.CLI.Common
         private static string _directory;
         private const string _executableName = "NTrospection.Fake.CLI.exe";
 
-	[ClassInitialize]
+        [ClassInitialize]
         public static void Init(TestContext test)
         {
-	    var projPath = @"\Fakes\NTrospection.Fake.CLI\";
-	    var exePath = @"bin\Debug\netcoreapp2.2\win10-x64\";
+            var projPath = @"\Fakes\NTrospection.Fake.CLI\";
+            var exePath = @"bin\Debug\net5.0\win10-x64\";
 	    
-	    var myPath = Directory.GetParent((new System.Uri(Assembly.GetExecutingAssembly().CodeBase)).AbsolutePath);
-	    var parentDir = myPath.Parent.Parent.Parent.Parent.FullName;
+            var myPath = Directory.GetParent((new System.Uri(Assembly.GetExecutingAssembly().CodeBase)).AbsolutePath);
+            var parentDir = myPath.Parent.Parent.Parent.Parent.FullName;
 	    
             _directory = parentDir + projPath + exePath;
 
-	    var pi = new ProcessStartInfo();
-	    pi.FileName = "CMD.exe";
-	    pi.WorkingDirectory = parentDir + projPath;
-	    pi.Arguments = $"/C dotnet publish -c Debug -r win10-x64";
-	    var proc = Process.Start(pi);
+            var pi = new ProcessStartInfo();
+            pi.FileName = "CMD.exe";
+            pi.WorkingDirectory = parentDir + projPath;
+            pi.Arguments = $"/C dotnet publish -c Debug -r win10-x64";
+            var proc = Process.Start(pi);
             proc.WaitForExit();
         }
 
         [TestMethod]
-	[TestCategory("Integration")]
+        [TestCategory("Integration")]
         public void ApplicationTerminatesWithFailedStatusWhenInvalidController()
         {
             string strCmdText;
@@ -43,7 +43,7 @@ namespace NTrospection.Tests.CLI.Common
         }
 
         [TestMethod]
-	[TestCategory("Integration")]
+        [TestCategory("Integration")]
         public void ApplicationTerminatesWithFailedStatusWhenMissingCommand()
         {
             string strCmdText;
@@ -55,7 +55,7 @@ namespace NTrospection.Tests.CLI.Common
         }
 
         [TestMethod]
-	[TestCategory("Integration")]
+        [TestCategory("Integration")]
         public void ApplicationTerminatesWithFailedStatusWhenInvalidParameters()
         {
             string strCmdText;
@@ -67,7 +67,7 @@ namespace NTrospection.Tests.CLI.Common
         }
 
         [TestMethod]
-	[TestCategory("Integration")]
+        [TestCategory("Integration")]
         public void ApplicationTerminatesWithFailedStatusWhenMissingParameters()
         {
             string strCmdText;
@@ -79,7 +79,7 @@ namespace NTrospection.Tests.CLI.Common
         }
 
         [TestMethod]
-	[TestCategory("Integration")]
+        [TestCategory("Integration")]
         public void ApplicationTerminatesWithSuccessStatusCalledCorrectly()
         {
             string strCmdText;
@@ -91,7 +91,7 @@ namespace NTrospection.Tests.CLI.Common
         }
 
         [TestMethod]
-	[TestCategory("Integration")]
+        [TestCategory("Integration")]
         public void ApplicationTerminatesWithSuccessStatusWhenDocumentation()
         {
             string strCmdText;

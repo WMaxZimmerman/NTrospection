@@ -124,10 +124,11 @@ namespace NTrospection.Tests.CLI.Services
             var pi = typeof(ParameterServiceTests)
             .GetMethod("FakeMethod")
             .GetParameters()[1];
+            var expectedPrefix = "--";
+            _mockSetting.Setup(s => s.ArgumentPrefix()).Returns(expectedPrefix);
 
             var actual = service.GetAliasString(pi);
-            // var expected = $" | {Settings.ArgumentPrefix}{_expectedAlias}";
-            var expected = $" | --{_expectedAlias}";
+            var expected = $" | {expectedPrefix}{_expectedAlias}";
 
             Assert.AreEqual(expected, actual);
         }
